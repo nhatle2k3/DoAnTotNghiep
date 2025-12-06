@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình Café - Đặt món</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-6">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-3xl font-bold mb-2">☕ Trình Café</h1>
+            <p class="text-amber-100">Đặt món trực tuyến</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Table Info -->
+        <div id="table-info" class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">
+                    <span id="table-number">?</span>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">
+                    <span id="location-name">Đang tải...</span>
+                </h2>
+                <p class="text-gray-600">
+                    Bàn <span id="table-number-text">?</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                <span class="mr-2">🍽️</span>
+                Thực đơn
+            </h3>
+            
+            <!-- Categories Filter -->
+            <div class="mb-6">
+                <div class="flex flex-wrap gap-2">
+                    <button class="category-btn px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors" data-category="all">
+                        Tất cả
+                    </button>
+                </div>
+            </div>
+
+            <!-- Menu Items -->
+            <div id="menu-items" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                <!-- Items will be loaded here -->
+            </div>
+
+            <!-- Cart Section -->
+            <div id="cart-section" class="bg-gray-50 rounded-xl p-6" style="display: none;">
+                <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <span class="mr-2">🛒</span>
+                    Giỏ hàng
+                </h4>
+                <div id="cart-items" class="space-y-3 mb-4">
+                    <!-- Cart items will be loaded here -->
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold">Tổng cộng:</span>
+                    <span id="cart-total" class="text-xl font-bold text-amber-600">0 VNĐ</span>
+                </div>
+                <button id="place-order-btn" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all transform hover:scale-105">
+                    Đặt món
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 text-center">
+            <div class="text-6xl mb-4">✅</div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Đặt món thành công!</h3>
+            <p class="text-gray-600 mb-6">Đơn hàng của bạn đã được gửi đến bếp. Vui lòng chờ nhân viên phục vụ.</p>
+            <button onclick="location.reload()" class="px-6 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
+                Đặt món mới
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationCode = urlParams.get('location');
+        const tableNumber = urlParams.get('table');
+
+    // API base URL: derive from current host so mobile devices can reach the API
+    const API_BASE = `${location.protocol}//${location.hostname}:4000/api`;
+
+        // State
+        let menuItems = [];
+        let categories = [];
+        let cart = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!locationCode || !tableNumber) {
+                alert('Thông tin bàn không hợp lệ!');
+                return;
+            }
+
+            // Update table info
+            document.getElementById('table-number').textContent = tableNumber;
+            document.getElementById('table-number-text').textContent = tableNumber;
+
+            // Load location name
+            await loadLocationInfo();
+            
+            // Load menu
+            await loadMenu();
+            
+            // Load categories
+            await loadCategories();
+        });
+
+        async function loadLocationInfo() {
+            try {
+                const response = await fetch(`${API_BASE}/tables/locations`);
+                const locations = await response.json();
+                const location = locations.find(l => l.code === locationCode);
+                if (location) {
+                    document.getElementById('location-name').textContent = location.name;
+                } else {
+                    document.getElementById('location-name').textContent = `Chi nhánh ${locationCode}`;
+                    console.warn('Location not found:', locationCode);
+                }
+            } catch (error) {
+                console.error('Error loading location info:', error);
+                document.getElementById('location-name').textContent = `Chi nhánh ${locationCode}`;
+            }
+        }
+
+        async function loadMenu() {
+            try {
+                const response = await fetch(`${API_BASE}/menu`);
+                menuItems = await response.json();
+                renderMenuItems();
+            } catch (error) {
+                console.error('Error loading menu:', error);
+                document.getElementById('menu-items').innerHTML = '<p class="text-gray-500">Không thể tải thực đơn</p>';
+            }
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE}/menu/categories`);
+                categories = await response.json();
+                renderCategoryButtons();
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        function renderCategoryButtons() {
+            const container = document.querySelector('.category-btn').parentElement;
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = 'category-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors';
+                button.textContent = category.name;
+                button.dataset.category = category.id;
+                button.onclick = () => filterByCategory(category.id);
+                container.appendChild(button);
+            });
+        }
+
+        function filterByCategory(categoryId) {
+            // Update button states
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.className = btn.className.replace('bg-amber-500 text-white', 'bg-gray-200 text-gray-700');
+            });
+            
+            const activeBtn = document.querySelector(`[data-category="${categoryId}"]`);
+            if (activeBtn) {
+                activeBtn.className = activeBtn.className.replace('bg-gray-200 text-gray-700', 'bg-amber-500 text-white');
+            }
+
+            // Filter and render items
+            const filteredItems = categoryId === 'all' ? menuItems : menuItems.filter(item => item.category_id == categoryId);
+            renderMenuItems(filteredItems);
+        }
+
+        function renderMenuItems(items = menuItems) {
+            const container = document.getElementById('menu-items');
+            
+            if (items.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">Không có món nào trong danh mục này</p>';
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+                    <div class="aspect-w-16 aspect-h-9 bg-gray-100">
+                        <img src="${item.image_url || '/images/menu/default.jpg'}" 
+                             alt="${item.name}" 
+                             class="w-full h-48 object-cover"
+                             onerror="this.src='/images/menu/default.jpg'">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="font-semibold text-gray-800">${item.name}</h4>
+                            <span class="text-lg font-bold text-amber-600">${formatPrice(item.price)}</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-3">${item.category_name}</p>
+                        <button onclick="addToCart(${item.id})" 
+                                class="w-full bg-amber-500 text-white py-2 rounded-lg hover:bg-amber-600 transition-colors">
+                            Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            if (!item) return;
+
+            const existingItem = cart.find(i => i.id === itemId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+
+            updateCartDisplay();
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(item => item.id !== itemId);
+            updateCartDisplay();
+        }
+
+        function updateQuantity(itemId, change) {
+            const item = cart.find(i => i.id === itemId);
+            if (!item) return;
+
+            item.quantity += change;
+            if (item.quantity <= 0) {
+                removeFromCart(itemId);
+            } else {
+                updateCartDisplay();
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartSection = document.getElementById('cart-section');
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+
+            if (cart.length === 0) {
+                cartSection.style.display = 'none';
+                return;
+            }
+
+            cartSection.style.display = 'block';
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="flex items-center justify-between bg-white p-3 rounded-lg">
+                    <div class="flex-1">
+                        <h5 class="font-medium text-gray-800">${item.name}</h5>
+                        <p class="text-sm text-gray-500">${formatPrice(item.price)}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center text-sm">-</button>
+                        <span class="w-8 text-center">${item.quantity}</span>
+                        <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center text-sm">+</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotal.textContent = formatPrice(total);
+        }
+
+        async function placeOrder() {
+            if (cart.length === 0) return;
+
+            try {
+                const tableId = await getTableId();
+                if (!tableId) {
+                    alert('Không thể xác định bàn. Vui lòng kiểm tra lại thông tin.');
+                    return;
+                }
+
+                const orderData = {
+                    table_id: tableId,
+                    items: cart.map(item => ({
+                        item_id: item.id,
+                        quantity: item.quantity
+                    }))
+                };
+
+                const response = await fetch(`${API_BASE}/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (response.ok) {
+                    document.getElementById('success-modal').style.display = 'flex';
+                    cart = [];
+                    updateCartDisplay();
+                } else {
+                    const errorData = await response.json();
+                    alert('Có lỗi xảy ra khi đặt món: ' + (errorData.error || 'Vui lòng thử lại.'));
+                }
+            } catch (error) {
+                console.error('Error placing order:', error);
+                alert('Có lỗi xảy ra khi đặt món. Vui lòng thử lại.');
+            }
+        }
+
+        async function getTableId() {
+            try {
+                // First get location ID from location code
+                const locationsResponse = await fetch(`${API_BASE}/tables/locations`);
+                const locations = await locationsResponse.json();
+                const location = locations.find(l => l.code === locationCode);
+                
+                if (!location) {
+                    console.error('Location not found:', locationCode);
+                    return null;
+                }
+                
+                // Get tables for that location
+                const tablesResponse = await fetch(`${API_BASE}/tables?location_id=${location.id}`);
+                const tables = await tablesResponse.json();
+                const table = tables.find(t => t.table_number == tableNumber);
+                return table ? table.id : null;
+            } catch (error) {
+                console.error('Error getting table ID:', error);
+                return null;
+            }
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(price);
+        }
+
+        // Event listeners
+        document.getElementById('place-order-btn').addEventListener('click', placeOrder);
+    </script>
+</body>
+</html>
