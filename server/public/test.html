@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test QR Order Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .error { color: red; }
+        .success { color: green; }
+        button { padding: 10px 15px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test QR Order Page</h1>
+    
+    <div class="test-section">
+        <h3>URL Parameters:</h3>
+        <p id="url-params"></p>
+    </div>
+    
+    <div class="test-section">
+        <h3>API Tests:</h3>
+        <button onclick="testLocations()">Test Locations API</button>
+        <button onclick="testTables()">Test Tables API</button>
+        <button onclick="testMenu()">Test Menu API</button>
+        <button onclick="testOrder()">Test Order API</button>
+        <div id="api-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Table ID Resolution:</h3>
+        <button onclick="resolveTableId()">Resolve Table ID</button>
+        <div id="table-id-result"></div>
+    </div>
+
+    <script>
+    const API_BASE = `${location.protocol}//${location.hostname}:4000/api`;
+        
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationCode = urlParams.get('location');
+        const tableNumber = urlParams.get('table');
+        const floorNumber = urlParams.get('floor');
+        
+        // Display URL parameters
+        document.getElementById('url-params').innerHTML = `
+            <strong>Location Code:</strong> ${locationCode || 'NOT SET'}<br>
+            <strong>Table Number:</strong> ${tableNumber || 'NOT SET'}<br>
+            <strong>Floor Number:</strong> ${floorNumber || 'NOT SET'}
+        `;
+        
+        async function testLocations() {
+            try {
+                const response = await fetch(`${API_BASE}/tables/locations`);
+                const data = await response.json();
+                document.getElementById('api-results').innerHTML = 
+                    `<div class="success">✅ Locations API: ${JSON.stringify(data, null, 2)}</div>`;
+            } catch (error) {
+                document.getElementById('api-results').innerHTML = 
+                    `<div class="error">❌ Locations API Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function testTables() {
+            try {
+                const response = await fetch(`${API_BASE}/tables?location_id=1&floor_id=1`);
+                const data = await response.json();
+                document.getElementById('api-results').innerHTML = 
+                    `<div class="success">✅ Tables API: ${JSON.stringify(data.slice(0, 2), null, 2)}...</div>`;
+            } catch (error) {
+                document.getElementById('api-results').innerHTML = 
+                    `<div class="error">❌ Tables API Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function testMenu() {
+            try {
+                const response = await fetch(`${API_BASE}/menu`);
+                const data = await response.json();
+                document.getElementById('api-results').innerHTML = 
+                    `<div class="success">✅ Menu API: ${data.length} items loaded</div>`;
+            } catch (error) {
+                document.getElementById('api-results').innerHTML = 
+                    `<div class="error">❌ Menu API Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function testOrder() {
+            try {
+                const response = await fetch(`${API_BASE}/orders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        table_id: 1,
+                        items: [{ item_id: 1, quantity: 1 }]
+                    })
+                });
+                const data = await response.json();
+                document.getElementById('api-results').innerHTML = 
+                    `<div class="success">✅ Order API: Order created with ID ${data.id}</div>`;
+            } catch (error) {
+                document.getElementById('api-results').innerHTML = 
+                    `<div class="error">❌ Order API Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function resolveTableId() {
+            try {
+                // Get location ID
+                const locationsResponse = await fetch(`${API_BASE}/tables/locations`);
+                const locations = await locationsResponse.json();
+                const location = locations.find(l => l.code === locationCode);
+                
+                if (!location) {
+                    document.getElementById('table-id-result').innerHTML = 
+                        `<div class="error">❌ Location not found: ${locationCode}</div>`;
+                    return;
+                }
+                
+                // Get table ID
+                const tablesResponse = await fetch(`${API_BASE}/tables?location_id=${location.id}&floor_id=${floorNumber}`);
+                const tables = await tablesResponse.json();
+                const table = tables.find(t => t.table_number == tableNumber);
+                
+                if (!table) {
+                    document.getElementById('table-id-result').innerHTML = 
+                        `<div class="error">❌ Table not found: Floor ${floorNumber}, Table ${tableNumber}</div>`;
+                    return;
+                }
+                
+                document.getElementById('table-id-result').innerHTML = 
+                    `<div class="success">✅ Table ID resolved: ${table.id} (${location.name} - Floor ${floorNumber} - Table ${tableNumber})</div>`;
+                    
+            } catch (error) {
+                document.getElementById('table-id-result').innerHTML = 
+                    `<div class="error">❌ Error resolving table ID: ${error.message}</div>`;
+            }
+        }
+        
+        // Auto-run tests on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testLocations();
+                setTimeout(testTables, 1000);
+                setTimeout(testMenu, 2000);
+                setTimeout(resolveTableId, 3000);
+            }, 500);
+        });
+    </script>
+</body>
+</html>

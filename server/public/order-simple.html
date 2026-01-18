@@ -1,0 +1,2570 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình Café - Đặt món</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .gradient-header {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #dc2626 100%);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        }
+        .hover\:scale-102:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-amber-50 to-orange-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-header text-white py-6 shadow-xl sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <div class="text-center flex-1 min-w-[200px]">
+                    <div class="flex items-center justify-center gap-3 mb-2">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-lg">
+                            <span class="text-2xl">☕</span>
+                </div>
+                        <div>
+                            <h1 class="text-3xl font-bold">Trình Café</h1>
+                            <p class="text-amber-100 text-sm">Đặt món trực tuyến</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 flex-wrap">
+                    <button id="ai-assistant-btn" class="bg-white bg-opacity-20 backdrop-blur-sm text-white px-4 py-2 rounded-xl font-semibold hover:bg-opacity-30 transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl">
+                        <span class="text-lg">🤖</span>
+                        <span class="hidden sm:inline">Trợ lý AI</span>
+                    </button>
+                    <!-- Cart Button -->
+                    <button id="cart-btn" class="relative bg-white bg-opacity-20 backdrop-blur-sm text-white px-4 py-2 rounded-xl font-semibold hover:bg-opacity-30 transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl">
+                        <span class="text-lg">🛒</span>
+                        <span class="hidden sm:inline">Giỏ hàng</span>
+                        <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center hidden shadow-lg animate-pulse">0</span>
+                    </button>
+                    <div id="user-info" class="hidden items-center gap-2">
+                        <span id="user-name" class="text-sm bg-white bg-opacity-20 px-3 py-1 rounded-lg"></span>
+                        <button id="logout-btn" class="text-sm underline hover:text-amber-200 transition-colors">Đăng xuất</button>
+                    </div>
+                    <button id="login-btn" class="bg-white text-amber-600 px-4 py-2 rounded-xl font-semibold hover:bg-amber-50 transition-all duration-200 shadow-lg hover:shadow-xl">
+                        Đăng nhập
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Table Info -->
+        <div id="table-info" class="bg-gradient-to-br from-white to-amber-50 rounded-3xl shadow-2xl p-8 mb-8 border border-amber-100 animate-fadeIn">
+            <div class="text-center">
+                <div class="w-20 h-20 bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 rounded-3xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4 shadow-lg transform hover:scale-110 transition-transform duration-200">
+                    <span id="table-number">?</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                    <span id="location-name">Đang tải...</span>
+                </h2>
+                <p class="text-lg text-gray-600 font-medium">
+                    Bàn số <span id="table-number-text" class="text-amber-600 font-bold">?</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Debug Info -->
+        <div id="debug-info" class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-8" style="display: none;">
+            <h3 class="font-semibold text-yellow-800 mb-2">🐛 Debug Info:</h3>
+            <div id="debug-content" class="text-sm text-yellow-700"></div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white rounded-3xl shadow-2xl p-6 mb-8 border border-gray-100">
+            <div class="flex bg-gray-100 rounded-2xl p-1 mb-6">
+                <button id="menu-tab-btn" class="tab-btn flex-1 py-3 text-center font-semibold text-amber-600 bg-white rounded-xl shadow-md transition-all duration-200">
+                    <span class="text-lg mr-2">🍽️</span>
+                    <span>Thực đơn</span>
+                </button>
+                <button id="orders-tab-btn" class="tab-btn flex-1 py-3 text-center font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200">
+                    <span class="text-lg mr-2">📋</span>
+                    <span>Đơn hàng của tôi</span>
+                </button>
+            </div>
+
+            <!-- Menu Tab Content -->
+            <div id="menu-tab-content">
+            
+            <!-- Search and Filter Section -->
+            <div class="mb-8 space-y-4">
+                <!-- Search Bar -->
+                <div class="relative">
+                    <input type="text" 
+                           id="search-input" 
+                           placeholder="🔍 Tìm kiếm món ăn..." 
+                           class="w-full px-5 py-4 pl-14 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 shadow-sm hover:shadow-md">
+                    <svg class="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" 
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                
+                <!-- Category Filter -->
+                <div class="flex flex-wrap gap-3">
+                    <button id="category-all" 
+                            class="category-filter-btn px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                        ✨ Tất cả
+                    </button>
+                    <div id="category-buttons" class="flex flex-wrap gap-3">
+                        <!-- Category buttons will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Menu Items -->
+            <div id="menu-items" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                <div class="text-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500 mx-auto mb-4"></div>
+                    <p class="text-gray-600">Đang tải thực đơn...</p>
+                </div>
+            </div>
+
+            <!-- Cart Section (Hidden - using modal instead) -->
+            <div id="cart-section" class="bg-gray-50 rounded-xl p-6" style="display: none;">
+                <!-- This section is kept for backward compatibility but hidden -->
+            </div>
+            </div>
+
+            <!-- Orders Tab Content -->
+            <div id="orders-tab-content" class="hidden">
+                <!-- Toggle button for showing all location orders vs current table only -->
+                <div class="mb-4 flex items-center justify-between bg-gray-50 rounded-lg p-3">
+                    <div>
+                        <p class="text-sm font-medium text-gray-700">Hiển thị đơn hàng:</p>
+                        <p class="text-xs text-gray-500" id="orders-filter-info">Tất cả bàn trong chi nhánh</p>
+                    </div>
+                    <button id="toggle-orders-filter" class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors text-sm font-medium">
+                        Chỉ bàn hiện tại
+                    </button>
+                </div>
+                <div id="orders-list" class="space-y-4">
+                    <div class="text-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500 mx-auto mb-4"></div>
+                        <p class="text-gray-600">Đang tải đơn hàng...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login/Register Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="auth-modal-title" class="text-2xl font-bold text-gray-800">Đăng nhập</h2>
+                <button id="close-auth-modal" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="flex mb-6 border-b">
+                <button id="login-tab" class="flex-1 py-2 text-center font-semibold text-amber-600 border-b-2 border-amber-600">
+                    Đăng nhập
+                </button>
+                <button id="register-tab" class="flex-1 py-2 text-center font-semibold text-gray-500 hover:text-gray-700">
+                    Đăng ký
+                </button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="login-email" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+                    <input type="password" id="login-password" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                </div>
+                <div id="login-error" class="text-red-600 text-sm hidden"></div>
+                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold hover:from-amber-600 hover:to-orange-600 transition-all">
+                    Đăng nhập
+                </button>
+            </form>
+            
+            <!-- Register Form -->
+            <form id="register-form" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
+                    <input type="text" id="register-name" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="register-email" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+                    <input type="password" id="register-password" required minlength="6"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                    <p class="text-xs text-gray-500 mt-1">Tối thiểu 6 ký tự</p>
+                </div>
+                <div id="register-error" class="text-red-600 text-sm hidden"></div>
+                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold hover:from-amber-600 hover:to-orange-600 transition-all">
+                    Đăng ký
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-3xl p-8 max-w-md mx-4 text-center shadow-2xl animate-fadeIn border-2 border-amber-200">
+            <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <span class="text-4xl">✅</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-3">Đặt món thành công!</h3>
+            <p class="text-gray-600 mb-8 text-lg">Đơn hàng của bạn đã được gửi đến bếp.</p>
+            <button onclick="location.reload()" class="w-full px-6 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-bold hover:from-amber-600 hover:to-orange-600 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105">
+                🍽️ Đặt món mới
+            </button>
+        </div>
+    </div>
+
+    <!-- AI Assistant Modal -->
+    <div id="ai-assistant-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl">
+                            🤖
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold">Trợ lý AI</h2>
+                            <p class="text-purple-100 text-sm">Tư vấn món ăn thông minh</p>
+                        </div>
+                    </div>
+                    <button id="close-ai-modal" class="text-white hover:text-purple-200 transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="ai-chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                        🤖
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 shadow-sm max-w-[80%]">
+                        <p class="text-gray-800">Xin chào! Tôi là trợ lý AI của Trình Café. Tôi có thể giúp bạn:</p>
+                        <ul class="mt-2 space-y-1 text-sm text-gray-600">
+                            <li>• Đề xuất món bán chạy nhất</li>
+                            <li>• Gợi ý món hợp mùa</li>
+                            <li>• Tư vấn món ăn phù hợp</li>
+                        </ul>
+                        <p class="mt-3 text-sm text-gray-500">Hãy chọn một trong các tùy chọn bên dưới hoặc hỏi tôi bất cứ điều gì!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="px-6 py-4 bg-white border-t border-gray-200">
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <button class="quick-action-btn px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors text-sm font-medium">
+                        🏆 Món bán chạy
+                    </button>
+                    <button class="quick-action-btn px-4 py-2 bg-pink-100 text-pink-700 rounded-lg hover:bg-pink-200 transition-colors text-sm font-medium">
+                        🌸 Món hợp mùa
+                    </button>
+                    <button class="quick-action-btn px-4 py-2 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-colors text-sm font-medium">
+                        ☕ Đề xuất hôm nay
+                    </button>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="flex gap-2">
+                    <input 
+                        type="text" 
+                        id="ai-chat-input" 
+                        placeholder="Hỏi tôi bất cứ điều gì về món ăn..." 
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    />
+                    <button id="ai-send-btn" class="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all font-semibold">
+                        Gửi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+        <div class="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl">
+                            🛒
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold">Giỏ hàng</h2>
+                            <p class="text-amber-100 text-sm" id="cart-item-count">0 món</p>
+                        </div>
+                    </div>
+                    <button id="close-cart-modal" class="text-white hover:text-amber-200 transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cart Items -->
+            <div id="cart-modal-items" class="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-gray-50 to-white">
+                <div id="cart-empty" class="text-center py-16">
+                    <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center">
+                        <span class="text-5xl">🛒</span>
+                    </div>
+                    <p class="text-gray-700 text-xl font-semibold mb-2">Giỏ hàng trống</p>
+                    <p class="text-gray-500 text-sm">Thêm món vào giỏ hàng để đặt món</p>
+                </div>
+                <div id="cart-items-list" class="space-y-3 hidden">
+                    <!-- Cart items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Footer with Total and Order Button -->
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border-t-2 border-amber-200 p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-4 pb-4 border-b border-amber-200">
+                    <span class="text-xl font-bold text-gray-800">Tổng cộng:</span>
+                    <div class="text-right">
+                        <span id="cart-modal-total" class="text-3xl font-bold text-amber-600">0 VNĐ</span>
+                </div>
+                </div>
+                <button id="place-order-btn-modal" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-4 rounded-xl font-bold text-lg hover:from-amber-600 hover:to-orange-600 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2">
+                    <span>📝</span>
+                    <span>Đặt món</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div id="order-detail-modal" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4" style="display: none;">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl backdrop-blur-sm">
+                            📋
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold">Chi tiết đơn hàng</h2>
+                            <p class="text-amber-100 text-sm" id="order-detail-id">#0</p>
+                        </div>
+                    </div>
+                    <button id="close-order-detail-modal" class="text-white hover:text-amber-200 transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-gray-50 to-white">
+                <!-- Order Info -->
+                <div class="bg-white rounded-2xl p-6 mb-6 shadow-md border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Trạng thái</p>
+                            <div id="order-detail-status" class="inline-block px-3 py-1 rounded-full text-sm font-semibold"></div>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Thời gian</p>
+                            <p id="order-detail-time" class="text-sm font-medium text-gray-800"></p>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-gray-200">
+                        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Thông tin bàn</p>
+                        <p id="order-detail-table" class="text-lg font-bold text-gray-800"></p>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-200 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                        <span class="mr-2">🍽️</span>
+                        Danh sách món
+                    </h3>
+                    <div id="order-detail-items" class="space-y-3">
+                        <!-- Items will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 border-2 border-amber-200">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xl font-bold text-gray-800">Tổng cộng:</span>
+                        <span id="order-detail-total" class="text-3xl font-bold text-amber-600">0 VNĐ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-white border-t border-gray-200 p-6">
+                <button id="close-order-detail-btn" class="w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4" style="display: none;">
+        <div class="bg-white rounded-2xl max-w-md mx-4 w-full max-h-[95vh] overflow-hidden shadow-2xl flex flex-col my-auto">
+            <!-- Fixed Header -->
+            <div class="flex-shrink-0 flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-orange-50">
+                <h2 class="text-2xl font-bold text-gray-800">Thanh toán</h2>
+                <button id="close-payment-modal" class="text-gray-500 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center hover:bg-white rounded-full transition-colors">&times;</button>
+            </div>
+            
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto p-6">
+            <div id="payment-order-info" class="mb-6">
+                <!-- Order info will be loaded here -->
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Phương thức thanh toán</label>
+                <div class="space-y-2">
+                    <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-amber-500 transition-colors">
+                        <input type="radio" name="payment-method" value="cash" class="mr-3" checked>
+                        <span class="font-medium">💵 Tiền mặt</span>
+                    </label>
+                    <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-amber-500 transition-colors">
+                        <input type="radio" name="payment-method" value="card" class="mr-3">
+                        <span class="font-medium">💳 Thẻ</span>
+                    </label>
+                    <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-amber-500 transition-colors">
+                        <input type="radio" name="payment-method" value="ewallet" class="mr-3">
+                        <span class="font-medium">📱 Ví điện tử</span>
+                    </label>
+                    </div>
+                </div>
+            
+            <!-- QR Code Section for E-wallet -->
+            <div id="qr-code-section" class="mb-6 hidden animate-fadeIn">
+                <div class="bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 rounded-2xl p-6 border-2 border-amber-300 shadow-2xl relative overflow-hidden">
+                    <!-- Decorative background elements -->
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-200/30 to-orange-200/30 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-orange-200/30 to-red-200/30 rounded-full blur-2xl"></div>
+                    
+                    <div class="relative z-10">
+                        <!-- Header with icon -->
+                        <div class="text-center mb-5">
+                            <div class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white px-6 py-3 rounded-full mb-4 shadow-lg transform hover:scale-105 transition-transform duration-200">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                </svg>
+                                <h3 class="text-lg font-bold">Quét mã QR để thanh toán</h3>
+                            </div>
+                            
+                            <!-- Amount card -->
+                            <div class="bg-white rounded-xl p-4 mb-4 shadow-lg border-2 border-amber-200 transform hover:scale-102 transition-transform duration-200">
+                                <p class="text-xs text-gray-500 mb-1 uppercase tracking-wide font-semibold">Số tiền cần chuyển</p>
+                                <p class="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-2" id="qr-amount">0 ₫</p>
+                                <div class="flex items-center justify-center gap-2 text-xs text-gray-600 bg-gray-50 rounded-lg px-3 py-2">
+                                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                                    </svg>
+                                    <span>Nội dung: <span id="qr-content" class="font-bold text-gray-800"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- QR Code display -->
+                        <div class="flex justify-center mb-5">
+                            <div class="relative bg-white p-6 rounded-2xl shadow-2xl border-4 border-amber-300 transform hover:scale-105 transition-all duration-300">
+                                <!-- QR Code Image (Fixed/Static) -->
+                                <img id="qr-code-image" src="/images/qr-code.png" alt="QR Code Ngân hàng" class="mx-auto block w-[260px] h-[260px] object-contain hidden rounded-lg">
+                                <!-- QR Code Canvas (Dynamic - hidden when using static image) -->
+                                <canvas id="qr-code-canvas" class="mx-auto block hidden rounded-lg" width="260" height="260"></canvas>
+                                <div id="qr-loading" class="text-center mt-2 hidden">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500 mx-auto"></div>
+                                    <p class="text-xs text-gray-500 mt-2">Đang tạo mã QR...</p>
+                                </div>
+                                <!-- Decorative corner elements -->
+                                <div class="absolute -top-2 -left-2 w-6 h-6 bg-amber-400 rounded-full opacity-50"></div>
+                                <div class="absolute -top-2 -right-2 w-6 h-6 bg-orange-400 rounded-full opacity-50"></div>
+                                <div class="absolute -bottom-2 -left-2 w-6 h-6 bg-orange-400 rounded-full opacity-50"></div>
+                                <div class="absolute -bottom-2 -right-2 w-6 h-6 bg-amber-400 rounded-full opacity-50"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bank information -->
+                        <div class="text-center">
+                            <div class="inline-flex items-center gap-2 mb-3">
+                                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                </svg>
+                                <p class="text-sm font-bold text-gray-800 uppercase tracking-wider">Thông tin chuyển khoản</p>
+                            </div>
+                            
+                            <div class="bg-white rounded-xl p-5 text-left shadow-lg border-2 border-amber-200 relative overflow-hidden">
+                                <!-- Copy button -->
+                                <button onclick="copyBankInfo()" class="absolute top-3 right-3 p-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-110" title="Sao chép thông tin">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                    </svg>
+                                </button>
+                                
+                                <!-- Bank info items -->
+                                <div class="space-y-3 pr-12">
+                                    <div class="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200">
+                                        <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Ngân hàng</p>
+                                            <p id="bank-name" class="text-base font-bold text-gray-800">Vietcombank</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200">
+                                        <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Số tài khoản</p>
+                                            <p id="bank-account" class="text-lg font-mono font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">1234567890</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200">
+                                        <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Chủ tài khoản</p>
+                                            <p id="account-holder" class="text-base font-bold text-gray-800">TRINH CAFE</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Instructions -->
+                            <div class="mt-4 flex items-center justify-center gap-2 text-xs text-gray-600 bg-white/80 rounded-lg px-4 py-2 border border-amber-200">
+                                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="italic">Vui lòng quét mã QR bằng ứng dụng ngân hàng của bạn</p>
+                            </div>
+                            
+                            <!-- Success message -->
+                            <div id="copy-success-message" class="hidden mt-3 text-center animate-fadeIn">
+                                <div class="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full border border-green-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <p class="text-sm font-semibold">Đã sao chép thông tin!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="payment-error" class="text-red-600 text-sm mb-4 hidden"></div>
+            </div>
+            
+            <!-- Fixed Footer -->
+            <div class="flex-shrink-0 flex gap-3 p-6 border-t border-gray-200 bg-gray-50">
+                <button id="cancel-payment-btn" class="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                    Hủy
+                </button>
+                <button id="confirm-payment-btn" class="flex-1 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg font-semibold hover:from-amber-600 hover:to-orange-600 transition-all">
+                    Xác nhận thanh toán
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationCode = urlParams.get('location');
+        const tableNumber = urlParams.get('table');
+
+    // API base URL: derive from current host so mobile devices can reach the API
+    const API_BASE = `${location.protocol}//${location.hostname}:4000/api`;
+
+        // State
+        let menuItems = [];
+        let allMenuItems = []; // Store all items for filtering
+        let categories = [];
+        let cart = [];
+        let debugMode = urlParams.get('debug') === 'true';
+        let currentUser = null;
+        let authToken = localStorage.getItem('authToken');
+        let searchTerm = '';
+        let selectedCategoryId = null;
+        let currentTableId = null;
+        let orders = [];
+        let ordersRefreshInterval = null;
+        let isLoadingOrders = false; // Flag to prevent multiple simultaneous loads
+        let showAllLocationOrders = true; // Default to show all orders in location (so users can see orders from different tables)
+
+        // Restore user state from localStorage
+        function restoreUserState() {
+            const savedToken = localStorage.getItem('authToken');
+            const savedUser = localStorage.getItem('userInfo');
+            
+            if (savedToken && savedUser) {
+                try {
+                    authToken = savedToken;
+                    currentUser = JSON.parse(savedUser);
+                    // Verify token is still valid (check expiration)
+                    const payload = JSON.parse(atob(authToken.split('.')[1]));
+                    const expirationTime = payload.exp * 1000; // Convert to milliseconds
+                    const currentTime = Date.now();
+                    
+                    if (currentTime < expirationTime) {
+                        // Token is still valid
+                        if (debugMode) {
+                            console.log('User state restored:', currentUser);
+                        }
+                        return true;
+                    } else {
+                        // Token expired, clear it
+                        if (debugMode) {
+                            console.log('Token expired, clearing state');
+                        }
+                        clearUserState();
+                        return false;
+                    }
+                } catch (error) {
+                    console.error('Error restoring user state:', error);
+                    clearUserState();
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        function clearUserState() {
+            authToken = null;
+            currentUser = null;
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userInfo');
+        }
+
+        function saveUserState(token, user) {
+            authToken = token;
+            currentUser = user;
+            localStorage.setItem('authToken', token);
+            localStorage.setItem('userInfo', JSON.stringify(user));
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (debugMode) {
+                document.getElementById('debug-info').style.display = 'block';
+            }
+
+            if (!locationCode || !tableNumber) {
+                showError('Thông tin bàn không hợp lệ! Vui lòng quét lại QR code.');
+                return;
+            }
+
+            // Update table info
+            document.getElementById('table-number').textContent = tableNumber;
+            document.getElementById('table-number-text').textContent = tableNumber;
+
+            // Restore user state from localStorage
+            restoreUserState();
+            updateAuthUI();
+
+            // Setup auth event listeners
+            setupAuthListeners();
+
+            // Load data
+            await Promise.all([
+                loadLocationInfo(),
+                loadMenu(),
+                loadCategories()
+            ]);
+            
+            // Setup search and filter listeners
+            setupSearchAndFilter();
+            
+            // Setup tab listeners
+            setupTabListeners();
+            
+            // Get table ID for orders
+            try {
+                currentTableId = await getTableId();
+                if (debugMode) {
+                    console.log('Table ID loaded:', currentTableId);
+                }
+            } catch (error) {
+                console.error('Error loading table ID:', error);
+            }
+            
+            if (debugMode) {
+                updateDebugInfo();
+            }
+        });
+
+        function showError(message) {
+            document.getElementById('menu-items').innerHTML = `
+                <div class="col-span-full text-center py-8">
+                    <div class="text-6xl mb-4">❌</div>
+                    <h3 class="text-lg font-medium text-red-600 mb-2">Lỗi</h3>
+                    <p class="text-gray-600">${message}</p>
+                </div>
+            `;
+        }
+
+        function updateDebugInfo() {
+            const debugContent = document.getElementById('debug-content');
+            debugContent.innerHTML = `
+                <strong>Location Code:</strong> ${locationCode}<br>
+                <strong>Table Number:</strong> ${tableNumber}<br>
+                <strong>Menu Items:</strong> ${menuItems.length}<br>
+                <strong>Cart Items:</strong> ${cart.length}
+            `;
+        }
+
+        async function loadLocationInfo() {
+            try {
+                const response = await fetch(`${API_BASE}/tables/locations`);
+                const locations = await response.json();
+                const location = locations.find(l => l.code === locationCode);
+                
+                if (location) {
+                    document.getElementById('location-name').textContent = location.name;
+                } else {
+                    document.getElementById('location-name').textContent = `Chi nhánh ${locationCode}`;
+                    console.warn('Location not found:', locationCode);
+                }
+            } catch (error) {
+                console.error('Error loading location info:', error);
+                document.getElementById('location-name').textContent = `Chi nhánh ${locationCode}`;
+            }
+        }
+
+        async function loadMenu() {
+            try {
+                const response = await fetch(`${API_BASE}/menu`);
+                allMenuItems = await response.json();
+                filterMenuItems();
+            } catch (error) {
+                console.error('Error loading menu:', error);
+                showError('Không thể tải thực đơn. Vui lòng thử lại sau.');
+            }
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE}/menu/categories`);
+                categories = await response.json();
+                renderCategoryButtons();
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        function renderCategoryButtons() {
+            const container = document.getElementById('category-buttons');
+            container.innerHTML = categories.map(category => `
+                <button class="category-filter-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                        data-category-id="${category.id}">
+                    ${category.name}
+                </button>
+            `).join('');
+
+            // Add event listeners to category buttons
+            document.querySelectorAll('.category-filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const categoryId = e.target.dataset.categoryId;
+                    if (categoryId) {
+                        selectedCategoryId = parseInt(categoryId);
+                    } else {
+                        selectedCategoryId = null; // "Tất cả" button
+                    }
+                    updateCategoryButtons();
+                    filterMenuItems();
+                });
+            });
+        }
+
+        function updateCategoryButtons() {
+            document.querySelectorAll('.category-filter-btn').forEach(btn => {
+                const categoryId = btn.dataset.categoryId;
+                const isAllButton = btn.id === 'category-all';
+                const isSelected = (selectedCategoryId === null && isAllButton) || 
+                                 (categoryId && parseInt(categoryId) === selectedCategoryId);
+                
+                if (isSelected) {
+                    btn.classList.remove('bg-gray-200', 'text-gray-700');
+                    btn.classList.add('bg-amber-500', 'text-white');
+                } else {
+                    btn.classList.remove('bg-amber-500', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                }
+            });
+        }
+
+        function setupSearchAndFilter() {
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('input', (e) => {
+                searchTerm = e.target.value.toLowerCase().trim();
+                filterMenuItems();
+            });
+        }
+
+        function filterMenuItems() {
+            // Filter by search term and category
+            menuItems = allMenuItems.filter(item => {
+                const matchesSearch = !searchTerm || 
+                    item.name.toLowerCase().includes(searchTerm) ||
+                    item.category_name.toLowerCase().includes(searchTerm);
+                
+                const matchesCategory = selectedCategoryId === null || 
+                    item.category_id === selectedCategoryId;
+                
+                return matchesSearch && matchesCategory && item.available;
+            });
+            
+            renderMenuItems();
+        }
+
+        function renderMenuItems() {
+            const container = document.getElementById('menu-items');
+            
+            if (menuItems.length === 0) {
+                if (searchTerm || selectedCategoryId !== null) {
+                    container.innerHTML = `
+                        <div class="col-span-full text-center py-8">
+                            <div class="text-4xl mb-4">🔍</div>
+                            <p class="text-gray-500">Không tìm thấy món nào phù hợp</p>
+                            <button onclick="clearFilters()" class="mt-4 text-amber-600 hover:text-amber-700 underline">
+                                Xóa bộ lọc
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">Không có món nào</p>';
+                }
+                return;
+            }
+
+            container.innerHTML = menuItems.map(item => `
+                <div class="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden card-hover shadow-md hover:shadow-2xl group">
+                    <div class="relative overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                        <img src="${item.image_url || '/images/menu/default.jpg'}" 
+                             alt="${item.name}" 
+                             class="w-full h-52 object-cover group-hover:scale-110 transition-transform duration-300"
+                             onerror="this.src='/images/menu/default.jpg'">
+                        <div class="absolute top-3 right-3 bg-white bg-opacity-90 backdrop-blur-sm px-3 py-1 rounded-full">
+                            <span class="text-xs font-semibold text-amber-600">${item.category_name}</span>
+                    </div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="font-bold text-gray-800 text-lg flex-1 mr-2 group-hover:text-amber-600 transition-colors">${item.name}</h4>
+                            <span class="text-xl font-bold text-amber-600 whitespace-nowrap">${formatPrice(item.price)}</span>
+                        </div>
+                        <button onclick="addToCart(${item.id})" 
+                                class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                            <span>➕</span>
+                            <span>Thêm vào giỏ</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            if (!item) return;
+
+            const existingItem = cart.find(i => i.id === itemId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+
+            updateCartDisplay();
+            if (debugMode) updateDebugInfo();
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(item => item.id !== itemId);
+            updateCartDisplay();
+            if (debugMode) updateDebugInfo();
+        }
+
+        function updateQuantity(itemId, change) {
+            const item = cart.find(i => i.id === itemId);
+            if (!item) return;
+
+            item.quantity += change;
+            if (item.quantity <= 0) {
+                removeFromCart(itemId);
+            } else {
+                updateCartDisplay();
+            }
+            if (debugMode) updateDebugInfo();
+        }
+
+        function updateCartDisplay() {
+            const cartSection = document.getElementById('cart-section');
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const cartBadge = document.getElementById('cart-badge');
+            const cartModalItems = document.getElementById('cart-modal-items');
+            const cartItemsList = document.getElementById('cart-items-list');
+            const cartEmpty = document.getElementById('cart-empty');
+            const cartModalTotal = document.getElementById('cart-modal-total');
+            const cartItemCount = document.getElementById('cart-item-count');
+            const placeOrderBtn = document.getElementById('place-order-btn-modal');
+
+            // Calculate total items and total price
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            // Update cart badge
+            if (totalItems > 0) {
+                cartBadge.textContent = totalItems;
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
+
+            // Update cart section (hidden but kept for compatibility)
+            if (cart.length === 0) {
+                cartSection.style.display = 'none';
+            } else {
+                cartSection.style.display = 'none'; // Always hidden, using modal instead
+                if (cartItems) {
+                    cartItems.innerHTML = cart.map(item => `
+                        <div class="flex items-center justify-between bg-white p-3 rounded-lg">
+                            <div class="flex-1">
+                                <h5 class="font-medium text-gray-800">${item.name}</h5>
+                                <p class="text-sm text-gray-500">${formatPrice(item.price)}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center text-sm">-</button>
+                                <span class="w-8 text-center">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center text-sm">+</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                if (cartTotal) {
+                    cartTotal.textContent = formatPrice(total);
+                }
+            }
+
+            // Update cart modal
+            if (cart.length === 0) {
+                cartEmpty.classList.remove('hidden');
+                cartItemsList.classList.add('hidden');
+                placeOrderBtn.disabled = true;
+            } else {
+                cartEmpty.classList.add('hidden');
+                cartItemsList.classList.remove('hidden');
+                placeOrderBtn.disabled = false;
+                
+                cartItemsList.innerHTML = cart.map(item => `
+                    <div class="bg-gradient-to-br from-white to-amber-50 rounded-2xl p-4 shadow-md border-2 border-amber-100 hover:shadow-lg transition-all duration-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex-1">
+                                <h5 class="font-bold text-gray-800 text-lg mb-1">${item.name}</h5>
+                                <div class="flex items-center gap-3">
+                                    <p class="text-sm text-gray-500">${item.category_name || ''}</p>
+                                    <span class="text-amber-600 font-bold">${formatPrice(item.price)}</span>
+                                </div>
+                            </div>
+                            <button onclick="removeFromCart(${item.id})" class="ml-2 text-red-500 hover:text-red-700 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-amber-200">
+                            <div class="flex items-center space-x-2 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200 overflow-hidden">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="w-10 h-10 bg-white text-gray-600 rounded-l-xl flex items-center justify-center text-lg font-bold hover:bg-gray-100 transition-colors">−</button>
+                                <span class="w-12 text-center font-bold text-gray-800 bg-white border-x border-amber-200 py-2">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="w-10 h-10 bg-white text-amber-600 rounded-r-xl flex items-center justify-center text-lg font-bold hover:bg-amber-50 transition-colors">+</button>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-500 mb-1">Thành tiền</p>
+                                <p class="text-xl font-bold text-amber-600">${formatPrice(item.price * item.quantity)}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Update totals
+            if (cartModalTotal) {
+                cartModalTotal.textContent = formatPrice(total);
+            }
+            if (cartItemCount) {
+                cartItemCount.textContent = `${totalItems} món`;
+            }
+        }
+
+        async function placeOrder() {
+            if (cart.length === 0) {
+                alert('Giỏ hàng trống. Vui lòng thêm món vào giỏ hàng trước khi đặt đơn.');
+                return;
+            }
+
+            // Check if user is logged in
+            if (!authToken || !currentUser) {
+                // Close cart modal first
+                document.getElementById('cart-modal').style.display = 'none';
+                // Show login modal
+                alert('Vui lòng đăng nhập để đặt món.');
+                document.getElementById('auth-modal').style.display = 'flex';
+                showLoginTab();
+                return;
+            }
+
+            // Disable buttons and show loading
+            const placeOrderBtn = document.getElementById('place-order-btn-modal');
+            const originalText = placeOrderBtn ? placeOrderBtn.innerHTML : '';
+            if (placeOrderBtn) {
+                placeOrderBtn.disabled = true;
+                placeOrderBtn.innerHTML = '<div class="flex items-center justify-center gap-2"><div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div><span>Đang đặt đơn...</span></div>';
+            }
+
+            try {
+                const tableId = await getTableId();
+                if (!tableId) {
+                    alert('Không thể xác định bàn. Vui lòng kiểm tra lại thông tin.');
+                    if (placeOrderBtn) {
+                        placeOrderBtn.disabled = false;
+                        placeOrderBtn.innerHTML = originalText;
+                    }
+                    return;
+                }
+
+                const orderData = {
+                    table_id: tableId,
+                    items: cart.map(item => ({
+                        item_id: item.id,
+                        quantity: item.quantity
+                    }))
+                };
+
+                console.log('Placing order:', orderData);
+
+                const response = await fetch(`${API_BASE}/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                const responseData = await response.json();
+
+                if (response.ok) {
+                    // Close cart modal
+                    document.getElementById('cart-modal').style.display = 'none';
+                    // Show success modal
+                    document.getElementById('success-modal').style.display = 'flex';
+                    cart = [];
+                    updateCartDisplay();
+                    if (debugMode) updateDebugInfo();
+                    
+                    console.log('Order placed successfully:', responseData);
+                    
+                    // Auto switch to orders tab after 2 seconds
+                    setTimeout(() => {
+                        document.getElementById('success-modal').style.display = 'none';
+                        showTab('orders');
+                    }, 2000);
+                } else {
+                    console.error('Order failed:', responseData);
+                    if (response.status === 401) {
+                        // Token expired or invalid
+                        clearUserState();
+                        updateAuthUI();
+                        document.getElementById('cart-modal').style.display = 'none';
+                        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+                        document.getElementById('auth-modal').style.display = 'flex';
+                        showLoginTab();
+                    } else if (response.status === 400) {
+                        alert('Dữ liệu không hợp lệ: ' + (responseData.error || 'Vui lòng kiểm tra lại thông tin.'));
+                    } else {
+                        alert('Có lỗi xảy ra khi đặt món: ' + (responseData.error || 'Vui lòng thử lại.'));
+                    }
+                }
+            } catch (error) {
+                console.error('Error placing order:', error);
+                alert('Có lỗi xảy ra khi đặt món: ' + error.message + '. Vui lòng kiểm tra kết nối và thử lại.');
+            } finally {
+                // Re-enable button
+                if (placeOrderBtn) {
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.innerHTML = originalText;
+                }
+            }
+        }
+
+        async function getTableId() {
+            try {
+                // First get location ID from location code
+                const locationsResponse = await fetch(`${API_BASE}/tables/locations`);
+                if (!locationsResponse.ok) {
+                    throw new Error(`Failed to fetch locations: ${locationsResponse.status}`);
+                }
+                const locations = await locationsResponse.json();
+                const location = locations.find(l => l.code === locationCode);
+                if (!location) {
+                    console.error('Location not found:', locationCode);
+                    console.log('Available locations:', locations);
+                    return null;
+                }
+
+                // Get tables for this location
+                const tablesResponse = await fetch(`${API_BASE}/tables?location_id=${location.id}`);
+                if (!tablesResponse.ok) {
+                    throw new Error(`Failed to fetch tables: ${tablesResponse.status}`);
+                }
+                const tables = await tablesResponse.json();
+                const table = tables.find(t => t.table_number == tableNumber);
+                
+                if (!table) {
+                    console.error('Table not found:', { locationCode, tableNumber, availableTables: tables });
+                    return null;
+                }
+                
+                if (debugMode) {
+                    console.log('Found table:', { id: table.id, table_number: table.table_number, location: location.name });
+                }
+                
+                return table.id;
+            } catch (error) {
+                console.error('Error getting table ID:', error);
+                return null;
+            }
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(price);
+        }
+
+        function clearFilters() {
+            searchTerm = '';
+            selectedCategoryId = null;
+            document.getElementById('search-input').value = '';
+            updateCategoryButtons();
+            filterMenuItems();
+        }
+
+        // Authentication functions
+        function setupAuthListeners() {
+            // Login button
+            document.getElementById('login-btn').addEventListener('click', () => {
+                document.getElementById('auth-modal').style.display = 'flex';
+                showLoginTab();
+            });
+
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                clearUserState();
+                updateAuthUI();
+            });
+
+            // Close modal
+            document.getElementById('close-auth-modal').addEventListener('click', () => {
+                document.getElementById('auth-modal').style.display = 'none';
+            });
+
+            // Tab switching
+            document.getElementById('login-tab').addEventListener('click', showLoginTab);
+            document.getElementById('register-tab').addEventListener('click', showRegisterTab);
+
+            // Form submissions
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            document.getElementById('register-form').addEventListener('submit', handleRegister);
+        }
+
+        function showLoginTab() {
+            document.getElementById('auth-modal-title').textContent = 'Đăng nhập';
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('login-tab').classList.add('text-amber-600', 'border-b-2', 'border-amber-600');
+            document.getElementById('login-tab').classList.remove('text-gray-500');
+            document.getElementById('register-tab').classList.remove('text-amber-600', 'border-b-2', 'border-amber-600');
+            document.getElementById('register-tab').classList.add('text-gray-500');
+            document.getElementById('login-error').classList.add('hidden');
+            document.getElementById('register-error').classList.add('hidden');
+        }
+
+        function showRegisterTab() {
+            document.getElementById('auth-modal-title').textContent = 'Đăng ký';
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+            document.getElementById('register-tab').classList.add('text-amber-600', 'border-b-2', 'border-amber-600');
+            document.getElementById('register-tab').classList.remove('text-gray-500');
+            document.getElementById('login-tab').classList.remove('text-amber-600', 'border-b-2', 'border-amber-600');
+            document.getElementById('login-tab').classList.add('text-gray-500');
+            document.getElementById('login-error').classList.add('hidden');
+            document.getElementById('register-error').classList.add('hidden');
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorDiv = document.getElementById('login-error');
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    saveUserState(data.token, data.user);
+                    updateAuthUI();
+                    document.getElementById('auth-modal').style.display = 'none';
+                    document.getElementById('login-form').reset();
+                    
+                    // If cart has items, open cart modal so user can place order
+                    if (cart.length > 0) {
+                        setTimeout(() => {
+                            document.getElementById('cart-modal').style.display = 'flex';
+                        }, 300);
+                    }
+                } else {
+                    errorDiv.textContent = data.error || 'Đăng nhập thất bại';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const full_name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const errorDiv = document.getElementById('register-error');
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ full_name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    saveUserState(data.token, data.user);
+                    updateAuthUI();
+                    document.getElementById('auth-modal').style.display = 'none';
+                    document.getElementById('register-form').reset();
+                    alert('Đăng ký thành công!');
+                    
+                    // If cart has items, open cart modal so user can place order
+                    if (cart.length > 0) {
+                        setTimeout(() => {
+                            document.getElementById('cart-modal').style.display = 'flex';
+                        }, 300);
+                    }
+                } else {
+                    errorDiv.textContent = data.error || 'Đăng ký thất bại';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                errorDiv.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        async function verifyToken() {
+            if (!authToken) return false;
+
+            try {
+                // Decode token to get user info and check expiration
+                const payload = JSON.parse(atob(authToken.split('.')[1]));
+                const expirationTime = payload.exp * 1000; // Convert to milliseconds
+                const currentTime = Date.now();
+                
+                if (currentTime >= expirationTime) {
+                    // Token expired
+                    clearUserState();
+                    return false;
+                }
+                
+                currentUser = {
+                    id: payload.id,
+                    email: payload.email,
+                    name: payload.name,
+                    role: payload.role
+                };
+                
+                // Update saved user info in case it changed
+                localStorage.setItem('userInfo', JSON.stringify(currentUser));
+                
+                return true;
+            } catch (error) {
+                console.error('Token verification error:', error);
+                clearUserState();
+                return false;
+            }
+        }
+
+        function updateAuthUI() {
+            const loginBtn = document.getElementById('login-btn');
+            const userInfo = document.getElementById('user-info');
+            const userName = document.getElementById('user-name');
+
+            if (authToken && currentUser) {
+                loginBtn.classList.add('hidden');
+                userInfo.classList.remove('hidden');
+                userName.textContent = currentUser.name || currentUser.email;
+            } else {
+                loginBtn.classList.remove('hidden');
+                userInfo.classList.add('hidden');
+            }
+        }
+
+        // Tab management
+        function setupTabListeners() {
+            document.getElementById('menu-tab-btn').addEventListener('click', () => showTab('menu'));
+            document.getElementById('orders-tab-btn').addEventListener('click', () => showTab('orders'));
+        }
+
+        function showTab(tabName) {
+            const menuTab = document.getElementById('menu-tab-content');
+            const ordersTab = document.getElementById('orders-tab-content');
+            const menuBtn = document.getElementById('menu-tab-btn');
+            const ordersBtn = document.getElementById('orders-tab-btn');
+
+            if (tabName === 'menu') {
+                menuTab.classList.remove('hidden');
+                ordersTab.classList.add('hidden');
+                menuBtn.classList.add('text-amber-600', 'border-b-2', 'border-amber-600');
+                menuBtn.classList.remove('text-gray-500');
+                ordersBtn.classList.remove('text-amber-600', 'border-b-2', 'border-amber-600');
+                ordersBtn.classList.add('text-gray-500');
+                
+                // Stop auto-refresh when on menu tab
+                stopOrdersAutoRefresh();
+            } else {
+                menuTab.classList.add('hidden');
+                ordersTab.classList.remove('hidden');
+                ordersBtn.classList.add('text-amber-600', 'border-b-2', 'border-amber-600');
+                ordersBtn.classList.remove('text-gray-500');
+                menuBtn.classList.remove('text-amber-600', 'border-b-2', 'border-amber-600');
+                menuBtn.classList.add('text-gray-500');
+                
+                console.log('Switched to orders tab');
+                // Load orders and start auto-refresh
+                loadOrders();
+                startOrdersAutoRefresh();
+            }
+        }
+
+        async function loadOrders() {
+            // Prevent multiple simultaneous loads
+            if (isLoadingOrders) {
+                console.log('loadOrders already in progress, skipping...');
+                return;
+            }
+            
+            console.log('loadOrders called, currentTableId:', currentTableId);
+            isLoadingOrders = true;
+            
+            // Show loading state
+            const ordersList = document.getElementById('orders-list');
+            if (!ordersList) {
+                console.error('orders-list element not found!');
+                isLoadingOrders = false;
+                return;
+            }
+            
+            // Only show loading spinner if list is empty or has content
+            const currentContent = ordersList.innerHTML.trim();
+            if (!currentContent || currentContent.includes('Đang tải')) {
+            ordersList.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500 mx-auto mb-4"></div>
+                    <p class="text-gray-600">Đang tải đơn hàng...</p>
+                </div>
+            `;
+            }
+
+            // Try to get table ID if not available
+            if (!currentTableId) {
+                console.log('Table ID not available, fetching...');
+                try {
+                    currentTableId = await getTableId();
+                    console.log('Got table ID:', currentTableId);
+                    if (!currentTableId) {
+                        ordersList.innerHTML = `
+                            <div class="text-center py-8">
+                                <div class="text-4xl mb-4">⚠️</div>
+                                <p class="text-gray-500 mb-2">Không thể xác định bàn</p>
+                                <p class="text-sm text-gray-400 mb-4">Location: ${locationCode}, Table: ${tableNumber}</p>
+                                <p class="text-sm text-gray-400">Vui lòng quét lại QR code</p>
+                            </div>
+                        `;
+                        isLoadingOrders = false;
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error getting table ID:', error);
+                    ordersList.innerHTML = `
+                        <div class="text-center py-8">
+                            <div class="text-4xl mb-4">⚠️</div>
+                            <p class="text-red-500 mb-2">Lỗi khi xác định bàn</p>
+                            <p class="text-sm text-gray-400">${error.message}</p>
+                            <button onclick="loadOrders()" class="mt-4 px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
+                                Thử lại
+                            </button>
+                        </div>
+                    `;
+                    isLoadingOrders = false;
+                    return;
+                }
+            }
+
+            try {
+                // Option 1: Load orders for current table only
+                // Option 2: Load all orders in the location (to see orders from different tables)
+                let url;
+                if (showAllLocationOrders && locationCode) {
+                    url = `${API_BASE}/orders/location/${locationCode}`;
+                    console.log('Fetching all orders for location:', locationCode);
+                } else {
+                    if (!currentTableId) {
+                        ordersList.innerHTML = `
+                            <div class="text-center py-8">
+                                <div class="text-4xl mb-4">⚠️</div>
+                                <p class="text-gray-500 mb-2">Không thể xác định bàn</p>
+                                <p class="text-sm text-gray-400">Vui lòng quét lại QR code</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    url = `${API_BASE}/orders/table/${currentTableId}`;
+                    console.log('Fetching orders for table:', currentTableId);
+                }
+                
+                console.log('Fetching orders from:', url);
+                console.log('API_BASE:', API_BASE);
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                console.log('Response status:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    let errorData;
+                    try {
+                        const text = await response.text();
+                        console.log('Error response text:', text);
+                        errorData = JSON.parse(text);
+                    } catch (e) {
+                        errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+                    }
+                    console.error('API Error:', errorData);
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+                
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+                try {
+                    orders = JSON.parse(responseText);
+                } catch (e) {
+                    console.error('Failed to parse JSON:', e);
+                    throw new Error('Invalid JSON response from server');
+                }
+                console.log('Orders received:', orders);
+                console.log('Number of orders:', orders.length);
+                
+                if (!Array.isArray(orders)) {
+                    console.error('Orders is not an array:', orders);
+                    throw new Error('Invalid response format: expected array');
+                }
+                
+                renderOrders();
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                console.error('Error stack:', error.stack);
+                ordersList.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="text-4xl mb-4">❌</div>
+                        <p class="text-red-500 mb-2">Lỗi khi tải đơn hàng</p>
+                        <p class="text-sm text-gray-400 mb-2">${error.message}</p>
+                        <p class="text-xs text-gray-400 mb-4">Table ID: ${currentTableId || 'N/A'}</p>
+                        <button onclick="loadOrders()" class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
+                            Thử lại
+                        </button>
+                    </div>
+                `;
+            } finally {
+                // Always reset loading flag
+                isLoadingOrders = false;
+            }
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('orders-list');
+            
+            if (!container) {
+                console.error('orders-list container not found!');
+                return;
+            }
+            
+            console.log('Rendering orders, count:', orders.length);
+            
+            if (!orders || orders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="text-4xl mb-4">📋</div>
+                        <p class="text-gray-500">Bạn chưa có đơn hàng nào</p>
+                        <p class="text-sm text-gray-400 mt-2">Bàn: ${tableNumber}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = orders.map(order => {
+                const statusInfo = getStatusInfo(order.status);
+                // Show location info if showing all location orders
+                const locationInfo = showAllLocationOrders && order.location_name 
+                    ? `<div class="flex items-center gap-2 mb-2">
+                         <span class="text-gray-400">📍</span>
+                         <span class="text-sm text-gray-600">${order.location_name}</span>
+                       </div>` 
+                    : '';
+                return `
+                    <div class="bg-gradient-to-br from-white to-amber-50 border-2 ${statusInfo.borderColor} rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200 card-hover">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center text-white font-bold shadow-md">
+                                        #${order.id}
+                                    </div>
+                            <div>
+                                        <h4 class="text-xl font-bold text-gray-800">Đơn hàng #${order.id}</h4>
+                                <p class="text-sm text-gray-500">${formatDateTime(order.created_at)}</p>
+                            </div>
+                                </div>
+                                ${locationInfo}
+                            </div>
+                            <span class="px-4 py-2 rounded-full text-sm font-semibold ${statusInfo.bgColor} ${statusInfo.textColor} border-2 ${statusInfo.borderColor} shadow-sm">
+                                ${statusInfo.label}
+                            </span>
+                        </div>
+                        
+                        <div class="mb-4 p-4 bg-white rounded-xl border border-gray-200">
+                            <p class="text-gray-600 mb-1">
+                                <span class="font-medium">🪑 Bàn:</span> 
+                                <span class="font-bold text-gray-800">${order.table_number || 'N/A'}</span>
+                            </p>
+                            <div class="mt-3 pt-3 border-t border-gray-200">
+                                <p class="text-sm text-gray-500 mb-1">Tổng tiền</p>
+                                <p class="text-2xl font-bold text-amber-600">${formatPrice(order.total)}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-3">
+                            <button onclick="viewOrderDetails(${order.id})" 
+                                    class="flex-1 px-4 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl font-semibold hover:from-gray-200 hover:to-gray-300 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center gap-2">
+                                <span>👁️</span>
+                                <span>Chi tiết</span>
+                            </button>
+                            ${order.status === 'served' || order.status === 'ready' ? `
+                                <button onclick="openPaymentModal(${order.id})" 
+                                        class="flex-1 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                    <span>💰</span>
+                                    <span>Thanh toán</span>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getStatusInfo(status) {
+            const statusMap = {
+                'pending': { label: '⏳ Chờ xử lý', bgColor: 'bg-yellow-100', textColor: 'text-yellow-800', borderColor: 'border-yellow-300' },
+                'preparing': { label: '👨‍🍳 Đang chế biến', bgColor: 'bg-blue-100', textColor: 'text-blue-800', borderColor: 'border-blue-300' },
+                'ready': { label: '✅ Sẵn sàng', bgColor: 'bg-green-100', textColor: 'text-green-800', borderColor: 'border-green-300' },
+                'served': { label: '🍽️ Đã phục vụ', bgColor: 'bg-purple-100', textColor: 'text-purple-800', borderColor: 'border-purple-300' },
+                'paid': { label: '💰 Đã thanh toán', bgColor: 'bg-gray-100', textColor: 'text-gray-800', borderColor: 'border-gray-300' },
+                'cancelled': { label: '❌ Đã hủy', bgColor: 'bg-red-100', textColor: 'text-red-800', borderColor: 'border-red-300' }
+            };
+            return statusMap[status] || { label: status, bgColor: 'bg-gray-100', textColor: 'text-gray-800', borderColor: 'border-gray-300' };
+        }
+
+        async function viewOrderDetails(orderId) {
+            try {
+                const response = await fetch(`${API_BASE}/orders/${orderId}`);
+                const order = await response.json();
+                
+                const statusInfo = getStatusInfo(order.status);
+                
+                // Update modal content
+                document.getElementById('order-detail-id').textContent = `#${order.id}`;
+                document.getElementById('order-detail-status').innerHTML = `<span class="${statusInfo.bgColor} ${statusInfo.textColor} px-3 py-1 rounded-full">${statusInfo.label}</span>`;
+                document.getElementById('order-detail-time').textContent = formatDateTime(order.created_at);
+                
+                // Get location info from order or orders list
+                const locationName = order.location_name || (orders.find(o => o.id === orderId)?.location_name);
+                const locationAddress = order.location_address || (orders.find(o => o.id === orderId)?.location_address);
+                const locationText = locationName 
+                    ? `Bàn ${order.table_number}, Chi nhánh ${locationName}${locationAddress ? ` - ${locationAddress}` : ''}`
+                    : `Bàn ${order.table_number}`;
+                document.getElementById('order-detail-table').textContent = locationText;
+                
+                // Render items
+                const itemsList = order.items.map(item => `
+                    <div class="bg-gradient-to-r from-gray-50 to-amber-50 rounded-xl p-4 border border-gray-200 hover:shadow-md transition-all duration-200">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h5 class="font-bold text-gray-800 text-lg mb-1">${item.name}</h5>
+                                <div class="flex items-center gap-4 text-sm">
+                                    <span class="text-gray-600">Số lượng: <span class="font-semibold text-gray-800">${item.quantity}</span></span>
+                                    <span class="text-gray-600">Đơn giá: <span class="font-semibold text-amber-600">${formatPrice(item.price)}</span></span>
+                        </div>
+                            </div>
+                            <div class="text-right ml-4">
+                                <p class="text-xs text-gray-500 mb-1">Thành tiền</p>
+                                <p class="text-xl font-bold text-amber-600">${formatPrice(item.price * item.quantity)}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                document.getElementById('order-detail-items').innerHTML = itemsList;
+                document.getElementById('order-detail-total').textContent = formatPrice(order.total);
+                
+                // Show modal
+                document.getElementById('order-detail-modal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error loading order details:', error);
+                alert('Không thể tải chi tiết đơn hàng');
+            }
+        }
+
+        function openPaymentModal(orderId) {
+            if (!authToken || !currentUser) {
+                alert('Vui lòng đăng nhập để thanh toán.');
+                document.getElementById('auth-modal').style.display = 'flex';
+                showLoginTab();
+                return;
+            }
+
+            const order = orders.find(o => o.id === orderId);
+            if (!order) {
+                console.error('Order not found:', orderId);
+                return;
+            }
+
+            const paymentModal = document.getElementById('payment-modal');
+            const paymentOrderInfo = document.getElementById('payment-order-info');
+            const qrSection = document.getElementById('qr-code-section');
+            
+            if (!paymentModal || !paymentOrderInfo) {
+                console.error('Payment modal elements not found');
+                return;
+            }
+
+            // Update order info
+            paymentOrderInfo.innerHTML = `
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600 mb-1">Đơn hàng #${order.id}</p>
+                    <p class="text-2xl font-bold text-amber-600">${formatPrice(order.total)}</p>
+                </div>
+            `;
+            
+            // Reset payment method to cash
+            const cashRadio = document.querySelector('input[name="payment-method"][value="cash"]');
+            if (cashRadio) {
+                cashRadio.checked = true;
+            }
+            
+            // Hide QR code section
+            if (qrSection) {
+                qrSection.classList.add('hidden');
+                qrSection.style.display = 'none';
+            }
+            
+            // Reset confirm button
+            const confirmBtn = document.getElementById('confirm-payment-btn');
+            if (confirmBtn) {
+                confirmBtn.textContent = 'Xác nhận thanh toán';
+                confirmBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                confirmBtn.classList.add('from-amber-500', 'to-orange-500', 'hover:from-amber-600', 'hover:to-orange-600');
+            }
+            
+            // Store order total and ID for QR code
+            paymentModal.dataset.orderTotal = order.total;
+            paymentModal.dataset.orderId = orderId;
+            
+            // Setup payment method listeners
+            setupPaymentMethodListeners();
+            
+            // Show modal
+            paymentModal.style.display = 'flex';
+        }
+
+        function generateQRCode(amount, orderId) {
+            // Bank information (you can customize these)
+            const bankAccount = '1040337283';
+            const accountHolder = 'LE VAN NHAT';
+            const bankName = 'Vietcombank';
+            const content = `TRINHCAFE ${orderId}`;
+            
+            // Update bank info display
+            const bankNameEl = document.getElementById('bank-name');
+            const bankAccountEl = document.getElementById('bank-account');
+            const accountHolderEl = document.getElementById('account-holder');
+            const qrAmountEl = document.getElementById('qr-amount');
+            const qrContentEl = document.getElementById('qr-content');
+            
+            if (bankNameEl) bankNameEl.textContent = bankName;
+            if (bankAccountEl) bankAccountEl.textContent = bankAccount;
+            if (accountHolderEl) accountHolderEl.textContent = accountHolder;
+            if (qrAmountEl) qrAmountEl.textContent = formatPrice(amount);
+            if (qrContentEl) qrContentEl.textContent = content;
+            
+            // Use static QR code image (fixed QR code)
+            const qrImage = document.getElementById('qr-code-image');
+            const canvas = document.getElementById('qr-code-canvas');
+            const qrLoading = document.getElementById('qr-loading');
+            
+            // Hide loading indicator
+            if (qrLoading) {
+                qrLoading.classList.add('hidden');
+            }
+            
+            // Hide canvas (we're using static image)
+            if (canvas) {
+                canvas.style.display = 'none';
+                canvas.classList.add('hidden');
+            }
+            
+            // Show static QR code image
+            if (qrImage) {
+                qrImage.classList.remove('hidden');
+                qrImage.style.display = 'block';
+                
+                // Handle image load error
+                qrImage.onerror = function() {
+                    console.error('QR code image not found:', qrImage.src);
+                    qrImage.style.display = 'none';
+                    const parent = qrImage.parentElement;
+                    if (parent) {
+                        parent.innerHTML = `
+                            <div class="text-center p-4">
+                                <div class="text-4xl mb-2">⚠️</div>
+                                <p class="text-red-500 text-sm font-semibold mb-1">Không tìm thấy mã QR</p>
+                                <p class="text-xs text-gray-500">Vui lòng đặt file qr-code.png vào thư mục /images/</p>
+                            </div>
+                        `;
+                    }
+                };
+                
+                // Handle image load success
+                qrImage.onload = function() {
+                    console.log('QR code image loaded successfully');
+                };
+            } else {
+                console.error('QR code image element not found!');
+            }
+        }
+
+        function handlePaymentMethodChange() {
+            const methodRadio = document.querySelector('input[name="payment-method"]:checked');
+            if (!methodRadio) return;
+            
+            const method = methodRadio.value;
+            const qrSection = document.getElementById('qr-code-section');
+            const confirmBtn = document.getElementById('confirm-payment-btn');
+            const paymentModal = document.getElementById('payment-modal');
+            
+            if (!qrSection || !confirmBtn || !paymentModal) {
+                console.error('Payment modal elements not found');
+                return;
+            }
+            
+            if (method === 'ewallet') {
+                // Show QR code section with animation
+                qrSection.classList.remove('hidden');
+                qrSection.style.display = 'block';
+                
+                // Get order info
+                const orderId = parseInt(paymentModal.dataset.orderId);
+                const orderTotal = parseFloat(paymentModal.dataset.orderTotal);
+                
+                if (!orderId || !orderTotal) {
+                    console.error('Order ID or Total not found:', { orderId, orderTotal });
+                    return;
+                }
+                
+                // Wait a bit for DOM to update before generating QR code
+                setTimeout(() => {
+                    generateQRCode(orderTotal, orderId);
+                }, 150);
+                
+                // Update confirm button text
+                confirmBtn.textContent = 'Đã thanh toán';
+                confirmBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+                confirmBtn.classList.remove('from-amber-500', 'to-orange-500', 'hover:from-amber-600', 'hover:to-orange-600');
+            } else {
+                // Hide QR code section
+                qrSection.classList.add('hidden');
+                qrSection.style.display = 'none';
+                
+                // Reset confirm button text and style
+                confirmBtn.textContent = 'Xác nhận thanh toán';
+                confirmBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                confirmBtn.classList.add('from-amber-500', 'to-orange-500', 'hover:from-amber-600', 'hover:to-orange-600');
+            }
+        }
+        
+        function setupPaymentMethodListeners() {
+            // Remove existing listeners first
+            document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+                const newRadio = radio.cloneNode(true);
+                radio.parentNode.replaceChild(newRadio, radio);
+            });
+            
+            // Add new listeners
+            document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+                radio.addEventListener('change', handlePaymentMethodChange);
+            });
+        }
+        
+        function copyBankInfo() {
+            const bankName = document.getElementById('bank-name').textContent;
+            const bankAccount = document.getElementById('bank-account').textContent;
+            const accountHolder = document.getElementById('account-holder').textContent;
+            const amount = document.getElementById('qr-amount').textContent;
+            const content = document.getElementById('qr-content').textContent;
+            
+            const bankInfo = `Thông tin chuyển khoản:
+Ngân hàng: ${bankName}
+Số tài khoản: ${bankAccount}
+Chủ tài khoản: ${accountHolder}
+Số tiền: ${amount}
+Nội dung: ${content}`;
+            
+            // Copy to clipboard
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(bankInfo).then(() => {
+                    // Show success message
+                    const successMsg = document.getElementById('copy-success-message');
+                    if (successMsg) {
+                        successMsg.classList.remove('hidden');
+                        setTimeout(() => {
+                            successMsg.classList.add('hidden');
+                        }, 2000);
+                    }
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                    // Fallback: use textarea method
+                    fallbackCopyTextToClipboard(bankInfo);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyTextToClipboard(bankInfo);
+            }
+        }
+        
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const successMsg = document.getElementById('copy-success-message');
+                    if (successMsg) {
+                        successMsg.classList.remove('hidden');
+                        setTimeout(() => {
+                            successMsg.classList.add('hidden');
+                        }, 2000);
+                    }
+                }
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                alert('Không thể sao chép. Vui lòng sao chép thủ công.');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        async function processPayment() {
+            const modal = document.getElementById('payment-modal');
+            const orderId = parseInt(modal.dataset.orderId);
+            const method = document.querySelector('input[name="payment-method"]:checked').value;
+            const errorDiv = document.getElementById('payment-error');
+
+            if (!authToken) {
+                errorDiv.textContent = 'Vui lòng đăng nhập để thanh toán';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/payments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ order_id: orderId, method })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    modal.style.display = 'none';
+                    alert('Thanh toán thành công!');
+                    loadOrders(); // Refresh orders list
+                } else {
+                    errorDiv.textContent = data.error || 'Thanh toán thất bại';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                errorDiv.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        function startOrdersAutoRefresh() {
+            // Clear any existing interval first
+            if (ordersRefreshInterval) {
+                clearInterval(ordersRefreshInterval);
+                ordersRefreshInterval = null;
+            }
+            // Refresh every 10 seconds (reduced frequency to avoid too many requests)
+            ordersRefreshInterval = setInterval(() => {
+                if (currentTableId) {
+                    loadOrders();
+                }
+            }, 10000);
+        }
+
+        function stopOrdersAutoRefresh() {
+            if (ordersRefreshInterval) {
+                clearInterval(ordersRefreshInterval);
+                ordersRefreshInterval = null;
+            }
+        }
+
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Payment modal event listeners
+        // Order Detail Modal event listeners
+        document.getElementById('close-order-detail-modal').addEventListener('click', () => {
+            document.getElementById('order-detail-modal').style.display = 'none';
+        });
+
+        document.getElementById('close-order-detail-btn').addEventListener('click', () => {
+            document.getElementById('order-detail-modal').style.display = 'none';
+        });
+
+        // Close order detail modal when clicking outside
+        document.getElementById('order-detail-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'order-detail-modal') {
+                document.getElementById('order-detail-modal').style.display = 'none';
+            }
+        });
+
+        document.getElementById('close-payment-modal').addEventListener('click', () => {
+            document.getElementById('payment-modal').style.display = 'none';
+        });
+
+        document.getElementById('cancel-payment-btn').addEventListener('click', () => {
+            document.getElementById('payment-modal').style.display = 'none';
+        });
+
+        document.getElementById('confirm-payment-btn').addEventListener('click', processPayment);
+
+        // Payment method change listeners will be setup when modal opens
+        // This is handled by setupPaymentMethodListeners() in openPaymentModal()
+
+        // Cart modal event listeners
+        document.getElementById('cart-btn').addEventListener('click', () => {
+            document.getElementById('cart-modal').style.display = 'flex';
+        });
+
+        document.getElementById('close-cart-modal').addEventListener('click', () => {
+            document.getElementById('cart-modal').style.display = 'none';
+        });
+
+        // Close cart modal when clicking outside
+        document.getElementById('cart-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'cart-modal') {
+                document.getElementById('cart-modal').style.display = 'none';
+            }
+        });
+
+        // Event listeners
+        // Only add listener for modal button (the old place-order-btn doesn't exist anymore)
+        const placeOrderBtnModal = document.getElementById('place-order-btn-modal');
+        if (placeOrderBtnModal) {
+            placeOrderBtnModal.addEventListener('click', () => {
+                placeOrder();
+            });
+        }
+
+        // ===== AI ASSISTANT =====
+        let topItems = [];
+        let currentSeason = '';
+
+        // Determine current season
+        function getCurrentSeason() {
+            const month = new Date().getMonth() + 1; // 1-12
+            if (month >= 3 && month <= 5) return 'spring'; // Xuân
+            if (month >= 6 && month <= 8) return 'summer'; // Hè
+            if (month >= 9 && month <= 11) return 'autumn'; // Thu
+            return 'winter'; // Đông
+        }
+
+        // Get seasonal recommendations
+        function getSeasonalRecommendations(season) {
+            const recommendations = {
+                spring: {
+                    name: 'Xuân',
+                    items: ['Trà xanh', 'Trà đen', 'Nước cam', 'Nước chanh', 'Cappuccino'],
+                    description: 'Mùa xuân là thời điểm tuyệt vời để thưởng thức các loại trà và nước ép trái cây tươi mát!'
+                },
+                summer: {
+                    name: 'Hè',
+                    items: ['Nước cam', 'Nước chanh', 'Trà đá', 'Latte đá', 'Espresso đá'],
+                    description: 'Mùa hè nóng bức, hãy làm mát với các loại nước ép và đồ uống lạnh!'
+                },
+                autumn: {
+                    name: 'Thu',
+                    items: ['Cappuccino', 'Latte', 'Trà xanh', 'Brownie', 'Cheesecake'],
+                    description: 'Mùa thu mát mẻ, thích hợp để thưởng thức cà phê nóng và bánh ngọt!'
+                },
+                winter: {
+                    name: 'Đông',
+                    items: ['Espresso', 'Cappuccino', 'Latte', 'Trà đen', 'Brownie', 'Cheesecake'],
+                    description: 'Mùa đông lạnh giá, hãy sưởi ấm với cà phê nóng và bánh ngọt!'
+                }
+            };
+            return recommendations[season] || recommendations.spring;
+        }
+
+        // Load top items from database
+        async function loadTopItems() {
+            try {
+                const response = await fetch(`${API_BASE}/reports/public/top-items`);
+                if (response.ok) {
+                    topItems = await response.json();
+                }
+            } catch (error) {
+                console.error('Error loading top items:', error);
+            }
+        }
+
+        // Search menu items from database
+        async function searchMenuItems(query) {
+            try {
+                const response = await fetch(`${API_BASE}/menu?search=${encodeURIComponent(query)}`);
+                if (response.ok) {
+                    return await response.json();
+                }
+            } catch (error) {
+                console.error('Error searching menu items:', error);
+            }
+            return [];
+        }
+
+        // Find menu item by name (fuzzy search)
+        async function findMenuItemByName(name) {
+            // First try exact match
+            if (typeof allMenuItems !== 'undefined' && allMenuItems.length > 0) {
+                const exactMatch = allMenuItems.find(item => 
+                    item.name.toLowerCase() === name.toLowerCase()
+                );
+                if (exactMatch) return exactMatch;
+                
+                // Try partial match
+                const partialMatch = allMenuItems.find(item => 
+                    item.name.toLowerCase().includes(name.toLowerCase()) ||
+                    name.toLowerCase().includes(item.name.toLowerCase())
+                );
+                if (partialMatch) return partialMatch;
+            }
+            
+            // Search in database
+            const results = await searchMenuItems(name);
+            if (results.length > 0) {
+                return results[0];
+            }
+            
+            return null;
+        }
+
+        // Add item to cart via AI
+        function addItemToCartByAI(item, quantity = 1) {
+            if (!item) return false;
+            
+            const existingItem = cart.find(i => i.id === item.id);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ ...item, quantity: quantity });
+            }
+            
+            updateCartDisplay();
+            return true;
+        }
+
+        // Add message to chat
+        function addMessage(message, isUser = false) {
+            const messagesContainer = document.getElementById('ai-chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`;
+            
+            if (isUser) {
+                messageDiv.innerHTML = `
+                    <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-400 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                        👤
+                    </div>
+                    <div class="bg-amber-500 text-white rounded-2xl p-4 shadow-sm max-w-[80%]">
+                        <p>${message}</p>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                        🤖
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 shadow-sm max-w-[80%]">
+                        ${message}
+                    </div>
+                `;
+            }
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Handle AI responses
+        async function handleAIRequest(request) {
+            const lowerRequest = request.toLowerCase();
+            
+            // Check for order/add to cart requests
+            const orderPatterns = [
+                /(?:thêm|đặt|mua|cho|muốn|tôi muốn)\s+(?:món\s+)?(.+?)(?:\s+vào\s+giỏ|\s+giỏ|\s+đơn|$)/i,
+                /(?:thêm|đặt|mua|cho)\s+(.+?)(?:\s+vào\s+giỏ|\s+giỏ|\s+đơn|$)/i,
+                /(?:tôi\s+muốn|cho\s+tôi)\s+(.+?)(?:\s+vào\s+giỏ|\s+giỏ|\s+đơn|$)/i
+            ];
+            
+            for (const pattern of orderPatterns) {
+                const match = request.match(pattern);
+                if (match) {
+                    const itemName = match[1].trim();
+                    if (itemName && itemName.length > 0) {
+                        // Try to find the item
+                        addMessage(`Đang tìm "${itemName}"...`, false);
+                        const item = await findMenuItemByName(itemName);
+                        
+                        if (item) {
+                            // Extract quantity if mentioned
+                            const quantityMatch = request.match(/(\d+)\s*(?:cái|ly|phần|món)/i);
+                            const quantity = quantityMatch ? parseInt(quantityMatch[1]) : 1;
+                            
+                            if (addItemToCartByAI(item, quantity)) {
+                                addMessage(`
+                                    <p class="text-gray-800 font-semibold mb-2">✅ Đã thêm vào giỏ hàng!</p>
+                                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-3 border border-green-200">
+                                        <p class="font-medium text-gray-800">${item.name}</p>
+                                        <p class="text-sm text-gray-600">Số lượng: ${quantity}</p>
+                                        <p class="text-sm font-semibold text-green-600">${formatPrice(item.price * quantity)}</p>
+                                    </div>
+                                    <p class="mt-2 text-sm text-gray-600">💡 Bạn có thể xem giỏ hàng ở phía dưới trang menu!</p>
+                                `);
+                            } else {
+                                addMessage(`<p class="text-gray-800">❌ Không thể thêm món vào giỏ hàng. Vui lòng thử lại!</p>`);
+                            }
+                            return;
+                        } else {
+                            addMessage(`
+                                <p class="text-gray-800 mb-2">❌ Không tìm thấy món "${itemName}"</p>
+                                <p class="text-sm text-gray-600 mb-2">Có thể bạn muốn tìm:</p>
+                                <button onclick="handleAIRequest('món bán chạy')" class="text-sm text-purple-600 hover:text-purple-700 underline">
+                                    Xem món bán chạy
+                                </button>
+                            `);
+                            return;
+                        }
+                    }
+                }
+            }
+            
+            // Top items - query from database
+            if (lowerRequest.includes('bán chạy') || lowerRequest.includes('phổ biến') || lowerRequest.includes('nổi bật') || lowerRequest.includes('top')) {
+                // Always reload from database to get latest data
+                await loadTopItems();
+                
+                if (topItems.length === 0) {
+                    addMessage('<p class="text-gray-800">Hiện tại chưa có dữ liệu về món bán chạy. Hãy thử lại sau nhé!</p>');
+                    return;
+                }
+                
+                let message = '<p class="text-gray-800 font-semibold mb-2">🏆 Top món bán chạy nhất (từ database):</p><ul class="space-y-2">';
+                topItems.forEach((item, index) => {
+                    message += `
+                        <li class="flex items-center justify-between p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-purple-600">${index + 1}.</span>
+                                <span class="font-medium">${item.name}</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-500">${item.qty} đơn</span>
+                                <button onclick="handleAddTopItem(${item.id})" class="px-3 py-1 bg-purple-500 text-white text-xs rounded-lg hover:bg-purple-600 transition-colors">
+                                    Thêm
+                                </button>
+                            </div>
+                        </li>
+                    `;
+                });
+                message += '</ul><p class="mt-3 text-sm text-gray-600">💡 Đây là những món được khách hàng yêu thích nhất (dữ liệu real-time từ database)!</p>';
+                addMessage(message);
+                return;
+            }
+            
+            // Seasonal recommendations
+            if (lowerRequest.includes('mùa') || lowerRequest.includes('hợp mùa') || lowerRequest.includes('theo mùa')) {
+                const season = getCurrentSeason();
+                const seasonal = getSeasonalRecommendations(season);
+                
+                let message = `
+                    <p class="text-gray-800 font-semibold mb-2">🌸 Món hợp mùa ${seasonal.name}:</p>
+                    <p class="text-gray-600 mb-3">${seasonal.description}</p>
+                    <ul class="space-y-2">
+                `;
+                seasonal.items.forEach(item => {
+                    // Try to find matching menu item
+                    const menuItem = typeof allMenuItems !== 'undefined' && allMenuItems.length > 0
+                        ? allMenuItems.find(m => m.name.toLowerCase().includes(item.toLowerCase()))
+                        : null;
+                    
+                    if (menuItem) {
+                        message += `
+                            <li class="flex items-center justify-between p-2 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-100">
+                                <span class="font-medium">${menuItem.name}</span>
+                                <span class="text-sm text-purple-600 font-semibold">${formatPrice(menuItem.price)}</span>
+                            </li>
+                        `;
+                    } else {
+                        message += `
+                            <li class="p-2 bg-gray-50 rounded-lg">
+                                <span class="font-medium">${item}</span>
+                            </li>
+                        `;
+                    }
+                });
+                message += '</ul>';
+                addMessage(message);
+                return;
+            }
+            
+            // Search for specific item
+            if (lowerRequest.includes('tìm') || lowerRequest.includes('có món') || lowerRequest.includes('món nào')) {
+                // Extract item name from request
+                const searchTerms = lowerRequest
+                    .replace(/tìm|món nào|có món|về/gi, '')
+                    .trim()
+                    .split(/\s+/)
+                    .filter(word => word.length > 1);
+                
+                if (searchTerms.length > 0) {
+                    const searchQuery = searchTerms.join(' ');
+                    addMessage(`Đang tìm "${searchQuery}" trong database...`, false);
+                    const results = await searchMenuItems(searchQuery);
+                    
+                    if (results.length > 0) {
+                        let message = `<p class="text-gray-800 font-semibold mb-2">🔍 Tìm thấy ${results.length} món:</p><ul class="space-y-2">`;
+                        results.slice(0, 5).forEach(item => {
+                            message += `
+                                <li class="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                                    <div>
+                                        <p class="font-medium">${item.name}</p>
+                                        <p class="text-xs text-gray-500">${item.category_name}</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm font-semibold text-amber-600">${formatPrice(item.price)}</span>
+                                        <button onclick="handleAddTopItem(${item.id})" class="px-2 py-1 bg-purple-500 text-white text-xs rounded hover:bg-purple-600">
+                                            Thêm
+                                        </button>
+                                    </div>
+                                </li>
+                            `;
+                        });
+                        message += '</ul>';
+                        addMessage(message);
+                    } else {
+                        addMessage(`<p class="text-gray-800">❌ Không tìm thấy món nào với từ khóa "${searchQuery}"</p>`);
+                    }
+                    return;
+                }
+            }
+            
+            // General recommendations
+            if (lowerRequest.includes('đề xuất') || lowerRequest.includes('gợi ý') || lowerRequest.includes('nên uống') || lowerRequest.includes('hôm nay')) {
+                // Reload top items from database
+                await loadTopItems();
+                
+                const season = getCurrentSeason();
+                const seasonal = getSeasonalRecommendations(season);
+                const top3 = topItems.slice(0, 3);
+                
+                let message = '<p class="text-gray-800 font-semibold mb-2">☕ Đề xuất cho bạn hôm nay:</p>';
+                
+                if (top3.length > 0) {
+                    message += '<p class="text-sm text-gray-600 mb-2">🏆 Món bán chạy (từ database):</p><ul class="space-y-1 mb-3">';
+                    top3.forEach(item => {
+                        message += `
+                            <li class="flex items-center justify-between text-sm p-2 bg-gray-50 rounded">
+                                <span>• ${item.name} - ${item.qty} đơn đã bán</span>
+                                <button onclick="handleAddTopItem(${item.id})" class="px-2 py-1 bg-purple-500 text-white text-xs rounded hover:bg-purple-600">
+                                    Thêm
+                                </button>
+                            </li>
+                        `;
+                    });
+                    message += '</ul>';
+                }
+                
+                message += `<p class="text-sm text-gray-600 mb-2">🌸 Món hợp mùa ${seasonal.name}:</p><ul class="space-y-1">`;
+                seasonal.items.slice(0, 3).forEach(item => {
+                    message += `<li class="text-sm">• ${item}</li>`;
+                });
+                message += '</ul>';
+                
+                addMessage(message);
+                return;
+            }
+            
+            // Default response
+            addMessage(`
+                <p class="text-gray-800">Tôi có thể giúp bạn:</p>
+                <ul class="mt-2 space-y-1 text-sm text-gray-600">
+                    <li>• Tìm món bán chạy nhất</li>
+                    <li>• Đề xuất món hợp mùa</li>
+                    <li>• Gợi ý món ăn phù hợp</li>
+                </ul>
+                <p class="mt-3 text-sm text-gray-500">Hãy thử hỏi: "Món nào bán chạy?" hoặc "Món nào hợp mùa?"</p>
+            `);
+        }
+
+        // Handle adding top item to cart (make it globally accessible)
+        window.handleAddTopItem = async function(itemId) {
+            // Find item in allMenuItems or search in database
+            let item = null;
+            if (typeof allMenuItems !== 'undefined' && allMenuItems.length > 0) {
+                item = allMenuItems.find(i => i.id === itemId);
+            }
+            
+            if (!item) {
+                // Search in database
+                const results = await searchMenuItems('');
+                item = results.find(i => i.id === itemId);
+            }
+            
+            if (item) {
+                if (addItemToCartByAI(item, 1)) {
+                    addMessage(`
+                        <p class="text-gray-800 font-semibold mb-2">✅ Đã thêm "${item.name}" vào giỏ hàng!</p>
+                        <p class="text-sm text-gray-600">💡 Bạn có thể xem giỏ hàng ở phía dưới trang menu!</p>
+                    `, false);
+                }
+            } else {
+                addMessage('<p class="text-gray-800">❌ Không tìm thấy món này!</p>', false);
+            }
+        };
+
+        // Initialize AI Assistant
+        function initAIAssistant() {
+            currentSeason = getCurrentSeason();
+            // Load top items from database on init
+            loadTopItems();
+            
+            // Open modal
+            document.getElementById('ai-assistant-btn').addEventListener('click', () => {
+                document.getElementById('ai-assistant-modal').style.display = 'flex';
+            });
+            
+            // Close modal
+            document.getElementById('close-ai-modal').addEventListener('click', () => {
+                document.getElementById('ai-assistant-modal').style.display = 'none';
+            });
+            
+            // Close on backdrop click
+            document.getElementById('ai-assistant-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'ai-assistant-modal') {
+                    document.getElementById('ai-assistant-modal').style.display = 'none';
+                }
+            });
+            
+            // Quick action buttons
+            document.querySelectorAll('.quick-action-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const text = btn.textContent.trim();
+                    addMessage(text, true);
+                    
+                    // Simulate typing delay
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    if (text.includes('bán chạy')) {
+                        await handleAIRequest('món bán chạy');
+                    } else if (text.includes('hợp mùa')) {
+                        await handleAIRequest('món hợp mùa');
+                    } else if (text.includes('hôm nay')) {
+                        await handleAIRequest('đề xuất');
+                    }
+                });
+            });
+            
+            // Send button
+            document.getElementById('ai-send-btn').addEventListener('click', async () => {
+                const input = document.getElementById('ai-chat-input');
+                const message = input.value.trim();
+                if (!message) return;
+                
+                addMessage(message, true);
+                input.value = '';
+                
+                // Simulate typing delay
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                await handleAIRequest(message);
+            });
+            
+            // Enter key to send
+            document.getElementById('ai-chat-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('ai-send-btn').click();
+                }
+            });
+        }
+
+        // Toggle orders filter (current table vs all location orders)
+        function setupOrdersFilterToggle() {
+            const toggleBtn = document.getElementById('toggle-orders-filter');
+            const filterInfo = document.getElementById('orders-filter-info');
+            
+            if (!toggleBtn) return;
+            
+            toggleBtn.addEventListener('click', () => {
+                showAllLocationOrders = !showAllLocationOrders;
+                
+                if (showAllLocationOrders) {
+                    toggleBtn.textContent = 'Chỉ bàn hiện tại';
+                    filterInfo.textContent = 'Tất cả bàn trong chi nhánh';
+                } else {
+                    toggleBtn.textContent = 'Xem tất cả bàn';
+                    filterInfo.textContent = 'Bàn hiện tại';
+                }
+                
+                // Reload orders with new filter
+                loadOrders();
+            });
+            
+            // Set initial state
+            if (showAllLocationOrders) {
+                toggleBtn.textContent = 'Chỉ bàn hiện tại';
+                filterInfo.textContent = 'Tất cả bàn trong chi nhánh';
+            } else {
+                toggleBtn.textContent = 'Xem tất cả bàn';
+                filterInfo.textContent = 'Bàn hiện tại';
+            }
+        }
+
+        // Initialize AI Assistant when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Setup orders filter toggle
+            setupOrdersFilterToggle();
+            
+            // This will be called after all other initialization
+            setTimeout(() => {
+                initAIAssistant();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

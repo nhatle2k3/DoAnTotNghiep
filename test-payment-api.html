@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Payment API - Trình Café</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <h1 class="text-2xl font-bold mb-6">Test Payment API</h1>
+    
+    <div class="space-y-4">
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">1. Lấy danh sách đơn hàng mở</h2>
+            <p class="text-sm text-gray-600 mb-2">GET /api/orders/open</p>
+            <button onclick="loadOpenOrders()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Load Orders
+            </button>
+            <div id="orders-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">2. Thanh toán đơn hàng</h2>
+            <p class="text-sm text-gray-600 mb-2">POST /api/payments</p>
+            <div class="flex space-x-2 mb-2">
+                <input type="number" id="payment-order-id" placeholder="Order ID" class="border rounded px-2 py-1">
+                <select id="payment-method" class="border rounded px-2 py-1">
+                    <option value="cash">cash</option>
+                    <option value="card">card</option>
+                    <option value="ewallet">ewallet</option>
+                </select>
+                <button onclick="processPayment()" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                    Process Payment
+                </button>
+            </div>
+            <div id="payment-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">3. Lịch sử thanh toán</h2>
+            <p class="text-sm text-gray-600 mb-2">GET /api/payments/history</p>
+            <button onclick="loadPaymentHistory()" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
+                Load History
+            </button>
+            <div id="history-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">4. Thống kê thanh toán</h2>
+            <p class="text-sm text-gray-600 mb-2">GET /api/payments/stats</p>
+            <button onclick="loadPaymentStats()" class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+                Load Stats
+            </button>
+            <div id="stats-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">5. Test Validation</h2>
+            <div class="space-y-2">
+                <button onclick="testInvalidPaymentMethod()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    Test Invalid Payment Method
+                </button>
+                <button onclick="testInvalidOrderId()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    Test Invalid Order ID
+                </button>
+                <button onclick="testNonExistentOrder()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    Test Non-existent Order
+                </button>
+                <button onclick="testAlreadyPaidOrder()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    Test Already Paid Order
+                </button>
+            </div>
+            <div id="validation-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:4000/api';
+        
+        async function loadOpenOrders() {
+            try {
+                const response = await fetch(`${API_BASE}/orders/open`);
+                const data = await response.json();
+                document.getElementById('orders-result').innerHTML = 
+                    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('orders-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function processPayment() {
+            const orderId = document.getElementById('payment-order-id').value;
+            const method = document.getElementById('payment-method').value;
+            
+            if (!orderId) {
+                alert('Vui lòng nhập Order ID');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/payments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE' // Replace with actual token
+                    },
+                    body: JSON.stringify({ 
+                        order_id: parseInt(orderId), 
+                        method: method 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('payment-result').innerHTML = 
+                        `<span class="text-green-600">Success: ${JSON.stringify(data, null, 2)}</span>`;
+                } else {
+                    document.getElementById('payment-result').innerHTML = 
+                        `<span class="text-red-600">Error: ${JSON.stringify(data, null, 2)}</span>`;
+                }
+            } catch (error) {
+                document.getElementById('payment-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function loadPaymentHistory() {
+            try {
+                const response = await fetch(`${API_BASE}/payments/history`, {
+                    headers: {
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                    }
+                });
+                const data = await response.json();
+                document.getElementById('history-result').innerHTML = 
+                    `<pre>${JSON.stringify(data.slice(0, 5), null, 2)}... (showing first 5 payments)</pre>`;
+            } catch (error) {
+                document.getElementById('history-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function loadPaymentStats() {
+            try {
+                const response = await fetch(`${API_BASE}/payments/stats`, {
+                    headers: {
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                    }
+                });
+                const data = await response.json();
+                document.getElementById('stats-result').innerHTML = 
+                    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('stats-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testInvalidPaymentMethod() {
+            try {
+                const response = await fetch(`${API_BASE}/payments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                    },
+                    body: JSON.stringify({ 
+                        order_id: 1, 
+                        method: 'invalid_method' 
+                    })
+                });
+                
+                const data = await response.json();
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Invalid Payment Method Test: ${JSON.stringify(data, null, 2)}</span>`;
+            } catch (error) {
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testInvalidOrderId() {
+            try {
+                const response = await fetch(`${API_BASE}/payments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                    },
+                    body: JSON.stringify({ 
+                        order_id: 'invalid', 
+                        method: 'cash' 
+                    })
+                });
+                
+                const data = await response.json();
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Invalid Order ID Test: ${JSON.stringify(data, null, 2)}</span>`;
+            } catch (error) {
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testNonExistentOrder() {
+            try {
+                const response = await fetch(`${API_BASE}/payments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                    },
+                    body: JSON.stringify({ 
+                        order_id: 99999, 
+                        method: 'cash' 
+                    })
+                });
+                
+                const data = await response.json();
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Non-existent Order Test: ${JSON.stringify(data, null, 2)}</span>`;
+            } catch (error) {
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testAlreadyPaidOrder() {
+            try {
+                const response = await fetch(`${API_BASE}/payments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                    },
+                    body: JSON.stringify({ 
+                        order_id: 1, 
+                        method: 'cash' 
+                    })
+                });
+                
+                const data = await response.json();
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Already Paid Order Test: ${JSON.stringify(data, null, 2)}</span>`;
+            } catch (error) {
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+    </script>
+</body>
+</html>

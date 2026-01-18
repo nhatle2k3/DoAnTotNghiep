@@ -1,0 +1,2624 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Labels - Trình Café</title>
+    <style>
+        @page {
+            margin: 0.5cm;
+            size: A4;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: white;
+        }
+        
+        .label {
+            width: 8cm;
+            height: 6cm;
+            border: 2px dashed #ccc;
+            margin: 0.2cm;
+            padding: 0.3cm;
+            display: inline-block;
+            vertical-align: top;
+            page-break-inside: avoid;
+            box-sizing: border-box;
+        }
+        
+        .label-header {
+            text-align: center;
+            margin-bottom: 0.2cm;
+        }
+        
+        .cafe-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #f59e0b;
+            margin-bottom: 0.1cm;
+        }
+        
+        .location-name {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 0.1cm;
+        }
+        
+        .table-info {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .qr-container {
+            text-align: center;
+            margin: 0.2cm 0;
+        }
+        
+        .qr-code {
+            width: 3cm;
+            height: 3cm;
+            border: 1px solid #ddd;
+        }
+        
+        .instructions {
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            margin-top: 0.1cm;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        @media print {
+            .label {
+                border: 2px dashed #ccc !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 1</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T1.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 2</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T2.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 3</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T3.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 4</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T4.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 5</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T5.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 6</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T6.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 7</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T7.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 8</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T8.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 9</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T9.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 10</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T10.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 11</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T11.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 12</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T12.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 13</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T13.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 14</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T14.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 15</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T15.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 16</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T16.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 17</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T17.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 18</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T18.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 19</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T19.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 20</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T20.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 21</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T21.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 22</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T22.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 23</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T23.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 24</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T24.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 25</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T25.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 26</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T26.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 27</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T27.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 28</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T28.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 29</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T29.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 25 Phạm Hồng Thái</div>
+                    <div class="table-info">Bàn 30</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PHT-T30.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+        
+        <div class="page-break"></div>
+    
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 1</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T1.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 2</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T2.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 3</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T3.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 4</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T4.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 5</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T5.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 6</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T6.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 7</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T7.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 8</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T8.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 9</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T9.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 10</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T10.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 11</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T11.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 12</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T12.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 13</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T13.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 14</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T14.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 15</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T15.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 16</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T16.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 17</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T17.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 18</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T18.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 19</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T19.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 20</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T20.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 21</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T21.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 22</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T22.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 23</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T23.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 24</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T24.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 25</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T25.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 26</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T26.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 27</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T27.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 28</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T28.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 29</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T29.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 22/4 Lê Đình Dương</div>
+                    <div class="table-info">Bàn 30</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../LDD-T30.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+        
+        <div class="page-break"></div>
+    
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 1</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T1.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 2</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T2.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 3</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T3.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 4</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T4.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 5</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T5.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 6</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T6.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 7</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T7.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 8</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T8.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 9</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T9.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 10</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T10.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 11</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T11.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 12</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T12.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 13</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T13.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 14</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T14.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 15</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T15.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 16</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T16.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 17</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T17.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 18</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T18.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 19</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T19.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 20</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T20.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 21</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T21.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 22</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T22.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 23</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T23.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 24</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T24.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 25</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T25.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 26</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T26.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 27</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T27.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 28</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T28.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 29</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T29.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 34/4 Nguyễn Hữu Thọ</div>
+                    <div class="table-info">Bàn 30</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../NHT-T30.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+        
+        <div class="page-break"></div>
+    
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 1</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T1.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 2</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T2.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 3</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T3.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 4</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T4.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 5</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T5.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 6</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T6.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 7</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T7.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 8</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T8.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 9</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T9.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 10</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T10.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 11</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T11.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 12</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T12.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 13</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T13.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 14</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T14.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 15</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T15.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 16</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T16.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 17</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T17.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 18</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T18.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 19</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T19.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 20</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T20.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 21</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T21.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 22</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T22.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 23</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T23.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 24</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T24.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 25</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T25.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 26</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T26.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 27</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T27.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 28</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T28.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 29</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T29.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            
+        
+            <div class="label">
+                <div class="label-header">
+                    <div class="cafe-name">☕ TRÌNH CAFÉ</div>
+                    <div class="location-name">Trình Cafe - 100/19 Phạm Như Xương</div>
+                    <div class="table-info">Bàn 30</div>
+                </div>
+                
+                <div class="qr-container">
+                    <img src="../PNX-T30.png" 
+                         alt="QR Code" 
+                         class="qr-code">
+                </div>
+                
+                <div class="instructions">
+                    Quét mã để đặt món<br>
+                    Scan to order
+                </div>
+            </div>
+            
+            <div class="page-break"></div>
+        
+        
+        
+    
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Order Status Update API - Trình Café</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <h1 class="text-2xl font-bold mb-6">Test Order Status Update API</h1>
+    
+    <div class="space-y-4">
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">1. Lấy danh sách đơn hàng mở</h2>
+            <p class="text-sm text-gray-600 mb-2">GET /api/orders/open</p>
+            <button onclick="loadOpenOrders()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Load Orders
+            </button>
+            <div id="orders-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">2. Cập nhật trạng thái đơn hàng</h2>
+            <p class="text-sm text-gray-600 mb-2">PUT /api/orders/:id/status</p>
+            <div class="flex space-x-2 mb-2">
+                <input type="number" id="order-id" placeholder="Order ID" class="border rounded px-2 py-1">
+                <select id="status-select" class="border rounded px-2 py-1">
+                    <option value="pending">pending</option>
+                    <option value="preparing">preparing</option>
+                    <option value="ready">ready</option>
+                    <option value="served">served</option>
+                    <option value="paid">paid</option>
+                    <option value="cancelled">cancelled</option>
+                </select>
+                <button onclick="updateOrderStatus()" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                    Update Status
+                </button>
+            </div>
+            <div id="update-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">3. Test Validation</h2>
+            <div class="space-y-2">
+                <button onclick="testInvalidStatus()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    Test Invalid Status
+                </button>
+                <button onclick="testInvalidOrderId()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    Test Invalid Order ID
+                </button>
+                <button onclick="testNonExistentOrder()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    Test Non-existent Order
+                </button>
+            </div>
+            <div id="validation-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:4000/api';
+        
+        async function loadOpenOrders() {
+            try {
+                const response = await fetch(`${API_BASE}/orders/open`);
+                const data = await response.json();
+                document.getElementById('orders-result').innerHTML = 
+                    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('orders-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function updateOrderStatus() {
+            const orderId = document.getElementById('order-id').value;
+            const status = document.getElementById('status-select').value;
+            
+            if (!orderId) {
+                alert('Vui lòng nhập Order ID');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE' // Replace with actual token
+                    },
+                    body: JSON.stringify({ status: status })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('update-result').innerHTML = 
+                        `<span class="text-green-600">Success: ${JSON.stringify(data, null, 2)}</span>`;
+                } else {
+                    document.getElementById('update-result').innerHTML = 
+                        `<span class="text-red-600">Error: ${JSON.stringify(data, null, 2)}</span>`;
+                }
+            } catch (error) {
+                document.getElementById('update-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testInvalidStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/orders/1/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                    },
+                    body: JSON.stringify({ status: 'invalid_status' })
+                });
+                
+                const data = await response.json();
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Invalid Status Test: ${JSON.stringify(data, null, 2)}</span>`;
+            } catch (error) {
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testInvalidOrderId() {
+            try {
+                const response = await fetch(`${API_BASE}/orders/invalid/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                    },
+                    body: JSON.stringify({ status: 'preparing' })
+                });
+                
+                const data = await response.json();
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Invalid Order ID Test: ${JSON.stringify(data, null, 2)}</span>`;
+            } catch (error) {
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testNonExistentOrder() {
+            try {
+                const response = await fetch(`${API_BASE}/orders/99999/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+                    },
+                    body: JSON.stringify({ status: 'preparing' })
+                });
+                
+                const data = await response.json();
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Non-existent Order Test: ${JSON.stringify(data, null, 2)}</span>`;
+            } catch (error) {
+                document.getElementById('validation-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+    </script>
+</body>
+</html>

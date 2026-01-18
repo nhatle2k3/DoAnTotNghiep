@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Revenue API - Trình Café</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <h1 class="text-2xl font-bold mb-6">Test Revenue API Endpoints</h1>
+    
+    <div class="space-y-4">
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">1. Tổng doanh thu</h2>
+            <p class="text-sm text-gray-600 mb-2">GET /api/reports/total-revenue</p>
+            <button onclick="testTotalRevenue()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Test API
+            </button>
+            <div id="total-revenue-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">2. Số ngày có doanh thu</h2>
+            <p class="text-sm text-gray-600 mb-2">GET /api/reports/revenue-days</p>
+            <button onclick="testRevenueDays()" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                Test API
+            </button>
+            <div id="revenue-days-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h2 class="text-lg font-semibold mb-2">3. Doanh thu 30 ngày gần nhất</h2>
+            <p class="text-sm text-gray-600 mb-2">GET /api/reports/revenue-last-30-days</p>
+            <button onclick="testLast30Days()" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
+                Test API
+            </button>
+            <div id="last-30-days-result" class="mt-2 p-2 bg-gray-100 rounded text-sm"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:4000/api';
+        
+        async function testTotalRevenue() {
+            try {
+                const response = await fetch(`${API_BASE}/reports/total-revenue`);
+                const data = await response.json();
+                document.getElementById('total-revenue-result').innerHTML = 
+                    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('total-revenue-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testRevenueDays() {
+            try {
+                const response = await fetch(`${API_BASE}/reports/revenue-days`);
+                const data = await response.json();
+                document.getElementById('revenue-days-result').innerHTML = 
+                    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('revenue-days-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testLast30Days() {
+            try {
+                const response = await fetch(`${API_BASE}/reports/revenue-last-30-days`);
+                const data = await response.json();
+                document.getElementById('last-30-days-result').innerHTML = 
+                    `<pre>${JSON.stringify(data.slice(0, 5), null, 2)}... (showing first 5 days)</pre>`;
+            } catch (error) {
+                document.getElementById('last-30-days-result').innerHTML = 
+                    `<span class="text-red-600">Error: ${error.message}</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
